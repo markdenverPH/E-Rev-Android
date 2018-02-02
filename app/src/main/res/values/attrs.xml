@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AppColors"> //customized https://carthrottle.io/how-to-implement-flexible-night-mode-in-your-android-app-f00f0f83b70e
+        <attr name="off_gold" format="color"/>
+        <attr name="off_green" format="color"/>
+    </declare-styleable>
+</resources>

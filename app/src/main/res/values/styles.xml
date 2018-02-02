@@ -1,0 +1,26 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">//orig:
+        Theme.AppCompat.Light.DarkActionBar
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="off_green">@color/off_green</item>
+        <item name="off_gold">@color/off_gold</item>
+    </style>
+
+
+    //login
+
+    <style name="TextTheme" parent="TextTheme">
+        <item name="colorControlNormal">#ffffff</item> <!--underline, no focus-->
+        <item name="colorControlActivated">@color/off_gold</item> <!--underline and text, focus-->
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
