@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Home");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -74,13 +75,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_grade) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_courseware) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_schedule) {
 
-        } else if (id == R.id.nav_about) {
+        } else if (id == R.id.nav_feedback) {
 
         } else if (id == R.id.nav_logout) {
 

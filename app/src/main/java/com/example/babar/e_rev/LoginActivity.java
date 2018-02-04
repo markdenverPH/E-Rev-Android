@@ -63,9 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             new fetch_login().execute();
         }
-
-//        Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-//        startActivity(myIntent);
     }
 
     ProgressDialog dialog;
@@ -101,18 +98,21 @@ public class LoginActivity extends AppCompatActivity {
                 bw.flush();
                 bw.close();
                 os.close();
-                int rc = con.getResponseCode();
+//                int rc = con.getResponseCode();
 //                con.disconnect();
 //                return rc;
 
-                InputStream inputStream = con.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                InputStream is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
                 StringBuilder sb = new StringBuilder();
                 String str = "";
-                while ((str = bufferedReader.readLine()) != null) {
+                while ((str = br.readLine()) != null) {
                     sb.append(str);
                 }
+                br.close();
+                is.close();
+                con.disconnect();
                 return sb.toString();
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show(); //ERROR LOGS
@@ -122,9 +122,11 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strJSON) {
+            parseJSON(strJSON);
+            Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
-            result.setText(strJSON);
-            Toast.makeText(getApplicationContext(), strJSON, Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, HomeFragment.class);
+            startActivity(intent);
         }
     }
 
@@ -132,14 +134,18 @@ public class LoginActivity extends AppCompatActivity {
         try {
             user_data = new ArrayList<>();
             jsonObject = new JSONObject(strJSON);
-
             jsonArray = jsonObject.getJSONArray("items");
             jsonObject = jsonArray.getJSONObject(0);
-            userdetails.set = jsonObject.getString("name"); //LAST
+
+            userdetails.setStudent_id(jsonObject.getInt("student_id"));
+            userdetails.setEmail(jsonObject.getString("email"));
+            userdetails.setStudent_department(jsonObject.getString("student_department"));
+            userdetails.setFull_name(jsonObject.getString("full_name"));
+            userdetails.setOffering_id(jsonObject.getInt("offering_id"));
+            userdetails.setImage_path(jsonObject.getString("image_path"));
 
         } catch (Exception e) {
             Log.i("Check", String.valueOf(e));
-
         }
     }
 
@@ -158,7 +164,6 @@ public class LoginActivity extends AppCompatActivity {
             sb.append("=");
             sb.append(URLEncoder.encode(v.getValue().toString(), "UTF-8"));
         }
-        System.out.println(sb.toString());
         return sb.toString();
     }
 }
