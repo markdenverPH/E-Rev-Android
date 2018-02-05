@@ -39,7 +39,6 @@ import java.util.Set;
 public class LoginActivity extends AppCompatActivity {
 
     public static EditText username, password;
-    public TextView result;
     ArrayList user_data;
     JSONArray jsonArray;
     JSONObject jsonObject;
@@ -51,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.pass);
-        result = (TextView) findViewById(R.id.tv_test);
         userdetails = new UserDetails();
     }
 
@@ -125,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             parseJSON(strJSON);
             Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
-            Intent intent = new Intent(this, HomeFragment.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
     }
