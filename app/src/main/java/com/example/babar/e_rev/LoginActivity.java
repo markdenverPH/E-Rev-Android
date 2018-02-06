@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     JSONArray jsonArray;
     JSONObject jsonObject;
     UserDetails userdetails;
+    String hey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.pass);
         userdetails = new UserDetails();
+        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
     }
 
     public void login(View v) {
@@ -62,8 +65,6 @@ public class LoginActivity extends AppCompatActivity {
             new fetch_login().execute();
         }
     }
-
-    ProgressDialog dialog;
 
     class fetch_login extends AsyncTask<Void, Void, String> {
         ProgressDialog dialog;
@@ -81,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("http://192.168.1.4/Engineering/mobile/login");
+                URL url = new URL("http://" + hey + "/Engineering/mobile/login");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -120,11 +121,16 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strJSON) {
-            parseJSON(strJSON);
-            Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            if (strJSON.isEmpty()) {
+                dialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_SHORT).show();
+            } else {
+                parseJSON(strJSON);
+                dialog.dismiss();
+                Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -163,5 +169,19 @@ public class LoginActivity extends AppCompatActivity {
             sb.append(URLEncoder.encode(v.getValue().toString(), "UTF-8"));
         }
         return sb.toString();
+    }
+
+    public String getWifiApIpAddress(Context context) {
+        WifiManager wifii = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        String d = "";
+        d = String.valueOf(wifii.getDhcpInfo().gateway);
+        return d;
+    }
+
+    public String intToIp(int addr) {
+        return ((addr & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF) + "." +
+                ((addr >>>= 8) & 0xFF));
     }
 }
