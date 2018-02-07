@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     JSONObject jsonObject;
     UserDetails userdetails;
     String hey;
+    CheckBox remember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +54,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.pass);
+        remember = (CheckBox) findViewById(R.id.cb_remember);
         userdetails = new UserDetails();
-        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
+//        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
+        hey = "172.16.86.42";           //emulator or cphone cable
     }
 
     public void login(View v) {
         String user = username.getText().toString();
         String pass = password.getText().toString();
-        if (user.equals("") || pass.equals("")) {         //empty
+        if (user.equals("") || pass.equals("")) {
             Toast.makeText(getApplicationContext(), "Empty field", Toast.LENGTH_LONG).show();
         } else {
             new fetch_login().execute();
@@ -115,8 +119,10 @@ public class LoginActivity extends AppCompatActivity {
                 return sb.toString();
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show(); //ERROR LOGS
+                Log.d("error", e.toString());
+                dialog.dismiss();
             }
-            return null;
+            return "";
         }
 
         @Override
@@ -136,9 +142,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void parseJSON(String strJSON) {
         try {
-            user_data = new ArrayList<>();
             jsonObject = new JSONObject(strJSON);
-            jsonArray = jsonObject.getJSONArray("items");
+            jsonArray = jsonObject.getJSONArray("result");
             jsonObject = jsonArray.getJSONObject(0);
 
             userdetails.setStudent_id(jsonObject.getInt("student_id"));

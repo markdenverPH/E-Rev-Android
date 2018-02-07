@@ -1,5 +1,6 @@
 package com.example.babar.e_rev;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -21,7 +24,9 @@ public class MainActivity extends AppCompatActivity
     public CoursewareFragment coursewareFragment = new CoursewareFragment();
     public ScheduleFragment scheduleFragment = new ScheduleFragment();
     public FeedbackFragment feedbackFragment = new FeedbackFragment();
-
+    NavigationView navigationView;
+    TextView nav_full_name;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,18 +38,24 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        UserDetails userDetails = new UserDetails();
+        nav_full_name = (TextView) findViewById(R.id.nav_full_name);
+//        nav_full_name.setText("test");
+
+//        Toast.makeText(getApplicationContext(), userDetails.getFull_name().toString(), Toast.LENGTH_LONG).show();
 //default nav
         if (savedInstanceState == null) {
 
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_hold, homeFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, homeFragment);
             fragmentTransaction.commit();
         }
         navigationView.setCheckedItem(R.id.nav_home);
@@ -58,6 +69,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            navigationView.setCheckedItem(R.id.nav_home);
         }
     }
 //
@@ -83,26 +95,34 @@ public class MainActivity extends AppCompatActivity
 //        return super.onOptionsItemSelected(item);
 //    }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         fragmentTransaction = fragmentManager.beginTransaction();
+        getFragmentManager().popBackStack();
+
         if (id == R.id.nav_home) {
-            fragmentTransaction.replace(R.id.fragment_hold, homeFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, homeFragment);
         } else if (id == R.id.nav_grade) {
-            fragmentTransaction.replace(R.id.fragment_hold, gradeAssessmentFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, gradeAssessmentFragment);
         } else if (id == R.id.nav_courseware) {
-            fragmentTransaction.replace(R.id.fragment_hold, coursewareFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, coursewareFragment);
         } else if (id == R.id.nav_schedule) {
-            fragmentTransaction.replace(R.id.fragment_hold, scheduleFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, coursewareFragment);
         } else if (id == R.id.nav_feedback) {
-            fragmentTransaction.replace(R.id.fragment_hold, feedbackFragment);
+            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                    .replace(R.id.fragment_hold, coursewareFragment);
         } else if (id == R.id.nav_logout) {
             finish();
         }
-//        fragmentTransaction.addToBackStack(null);
+
+//        fragmentTransaction.beginTransaction().add(R.id.main, newFragment).addToBackStack("fragBack").commit();
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
