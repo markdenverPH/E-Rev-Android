@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
     UserDetails userdetails;
     String hey;
     CheckBox remember;
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
+    public static final String MyPREFERENCES = "login" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.pass);
         remember = (CheckBox) findViewById(R.id.cb_remember);
         userdetails = new UserDetails();
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        editor = sharedpreferences.edit();
 //        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
         hey = "172.16.86.42";           //emulator or cphone cable
     }
