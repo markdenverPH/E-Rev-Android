@@ -6,7 +6,15 @@ package com.example.babar.e_rev;
 
 public class UserDetails {
     int student_id, offering_id;
-    String full_name, username, password, email, student_department, image_path;
+    String full_name, username, password, email, student_department, image_path, identifier;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
     public int getStudent_id() {
         return student_id;

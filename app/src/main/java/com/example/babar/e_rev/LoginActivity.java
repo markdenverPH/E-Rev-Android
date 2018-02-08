@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox remember;
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-    public static final String MyPREFERENCES = "login" ;
+    public static final String MyPREFERENCES = "login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +61,15 @@ public class LoginActivity extends AppCompatActivity {
         remember = (CheckBox) findViewById(R.id.cb_remember);
         userdetails = new UserDetails();
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        editor = sharedpreferences.edit();
+
+        WifiManager wifi = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifi.isWifiEnabled()) {
+            Toast.makeText(getApplicationContext(), "Wifi is ENABLED", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
+        }
 //        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        hey = "172.16.86.42";           //emulator or cphone cable
+        hey = "192.168.137.1";           //emulator or cphone cable
     }
 
     public void login(View v) {
@@ -158,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
             userdetails.setFull_name(jsonObject.getString("full_name"));
             userdetails.setOffering_id(jsonObject.getInt("offering_id"));
             userdetails.setImage_path(jsonObject.getString("image_path"));
-
+            userdetails.setIdentifier(jsonObject.getString("identifier"));
         } catch (Exception e) {
             Log.i("Check", String.valueOf(e));
         }
