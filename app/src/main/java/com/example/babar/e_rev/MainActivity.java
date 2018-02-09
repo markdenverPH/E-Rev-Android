@@ -3,7 +3,9 @@ package com.example.babar.e_rev;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +28,11 @@ public class MainActivity extends AppCompatActivity
     public FeedbackFragment feedbackFragment = new FeedbackFragment();
     NavigationView navigationView;
     TextView nav_full_name;
-    
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
+    final String key_user = "username";
+    final String key_pass = "password";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +52,9 @@ public class MainActivity extends AppCompatActivity
 
         UserDetails userDetails = new UserDetails();
         nav_full_name = (TextView) findViewById(R.id.nav_full_name);
-//        nav_full_name.setText("test");
 
-//        Toast.makeText(getApplicationContext(), userDetails.getFull_name().toString(), Toast.LENGTH_LONG).show();
-//default nav
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //default nav
         if (savedInstanceState == null) {
 
             fragmentManager = getFragmentManager();
@@ -113,11 +118,15 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.fragment_hold, coursewareFragment);
         } else if (id == R.id.nav_schedule) {
             fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
-                    .replace(R.id.fragment_hold, coursewareFragment);
+                    .replace(R.id.fragment_hold, scheduleFragment);
         } else if (id == R.id.nav_feedback) {
             fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
-                    .replace(R.id.fragment_hold, coursewareFragment);
+                    .replace(R.id.fragment_hold, feedbackFragment);
         } else if (id == R.id.nav_logout) {
+            sharedpreferences = getPreferences(MODE_PRIVATE);
+            editor = sharedpreferences.edit();
+            sharedpreferences.edit().remove(key_pass).apply();
+            sharedpreferences.edit().remove(key_user).apply();
             finish();
         }
 

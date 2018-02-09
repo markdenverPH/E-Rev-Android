@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +48,13 @@ public class LoginActivity extends AppCompatActivity {
     JSONArray jsonArray;
     JSONObject jsonObject;
     UserDetails userdetails;
-    String hey;
+    String hey, user_hold, pass_hold;
     CheckBox remember;
-    SharedPreferences sharedpreferences;
+    SharedPreferences sp;
     SharedPreferences.Editor editor;
-    public static final String MyPREFERENCES = "login";
+    final String key_user = "username";
+    final String key_pass = "password";
+    LinearLayout intro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,22 +64,35 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.pass);
         remember = (CheckBox) findViewById(R.id.cb_remember);
         userdetails = new UserDetails();
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
-        WifiManager wifi = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifi.isWifiEnabled()) {
-            Toast.makeText(getApplicationContext(), "Wifi is ENABLED", Toast.LENGTH_SHORT).show();
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+//        sp.edit().remove(key_pass).apply();
+//        sp.edit().remove(key_user).apply();
+        if (sp.getString(key_user, "") != "" && sp.getString(key_pass, "") != "") {
+            user_hold = sp.getString(key_user, "");
+            pass_hold = sp.getString(key_pass, "");
+            new fetch_login().execute();
         } else {
-            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
+            intro = (LinearLayout) findViewById(R.id.intro_layout);
+            intro.setVisibility(View.GONE);
         }
+
+        remember = (CheckBox) findViewById(R.id.cb_remember);
+//
+//        WifiManager wifi = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        if (wifi.isWifiEnabled()) {
+//            Toast.makeText(getApplicationContext(), "Wifi is ENABLED", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
+//        }
 //        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        hey = "192.168.137.1";           //emulator or cphone cable
+        hey = "192.168.1.4";           //emulator or cphone cable
+//        hey = "localhost";
     }
 
     public void login(View v) {
-        String user = username.getText().toString();
-        String pass = password.getText().toString();
-        if (user.equals("") || pass.equals("")) {
+        user_hold = username.getText().toString();
+        pass_hold = password.getText().toString();
+        if (user_hold.equals("") || pass_hold.equals("")) {
             Toast.makeText(getApplicationContext(), "Empty field", Toast.LENGTH_LONG).show();
         } else {
             new fetch_login().execute();
@@ -107,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 
                 ContentValues cv = new ContentValues();
-                cv.put("username", username.getText().toString());
-                cv.put("password", password.getText().toString());
+                cv.put("username", user_hold);
+                cv.put("password", pass_hold);
                 bw.write(createPostString(cv));
                 bw.flush();
                 bw.close();
@@ -129,9 +146,8 @@ public class LoginActivity extends AppCompatActivity {
                 is.close();
                 con.disconnect();
                 return sb.toString();
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show(); //ERROR LOGS
-                Log.d("error", e.toString());
+            } catch (Exception e) {     //error logs
+                Log.d("check", e.toString());
                 dialog.dismiss();
             }
             return "";
@@ -143,6 +159,12 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_SHORT).show();
             } else {
+                if (remember.isChecked()) {
+                    editor = sp.edit();
+                    editor.putString(key_user, username.getText().toString());
+                    editor.putString(key_pass, password.getText().toString());
+                    editor.apply();
+                }
                 parseJSON(strJSON);
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
@@ -166,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
             userdetails.setImage_path(jsonObject.getString("image_path"));
             userdetails.setIdentifier(jsonObject.getString("identifier"));
         } catch (Exception e) {
-            Log.i("Check", String.valueOf(e));
+            Log.i("check", String.valueOf(e));
         }
     }
 
