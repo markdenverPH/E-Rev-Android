@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     JSONArray jsonArray;
     JSONObject jsonObject;
     UserDetails userdetails;
-    String hey, user_hold, pass_hold;
+    String base, user_hold, pass_hold;
     CheckBox remember;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -65,8 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         remember = (CheckBox) findViewById(R.id.cb_remember);
         userdetails = new UserDetails();
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        sp.edit().remove(key_pass).apply();
-//        sp.edit().remove(key_user).apply();
+        sp.edit().remove(key_pass).apply();
+        sp.edit().remove(key_user).apply();
         if (sp.getString(key_user, "") != "" && sp.getString(key_pass, "") != "") {
             user_hold = sp.getString(key_user, "");
             pass_hold = sp.getString(key_pass, "");
@@ -84,9 +84,9 @@ public class LoginActivity extends AppCompatActivity {
 //        } else {
 //            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
 //        }
-//        hey = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        hey = "192.168.1.4";           //emulator or cphone cable
-//        hey = "localhost";
+//        base = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
+        base = "192.168.254.101";           //emulator or cphone cable
+//        base = "localhost";
     }
 
     public void login(View v) {
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("http://" + hey + "/Engineering/mobile/login");
+                URL url = new URL("http://" + base + "/Engineering/mobile/login");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -131,8 +131,6 @@ public class LoginActivity extends AppCompatActivity {
                 bw.close();
                 os.close();
 //                int rc = con.getResponseCode();
-//                con.disconnect();
-//                return rc;
 
                 InputStream is = con.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -169,6 +167,13 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("student_id", userdetails.getStudent_id());
+                intent.putExtra("email", userdetails.getEmail());
+                intent.putExtra("department", userdetails.getDepartment());
+                intent.putExtra("full_name", userdetails.getFull_name());
+                intent.putExtra("offering_id", userdetails.getOffering_id());
+                intent.putExtra("image_path", userdetails.getImage_path());
+                intent.putExtra("identifier", userdetails.getIdentifier());
                 startActivity(intent);
             }
         }
@@ -182,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
 
             userdetails.setStudent_id(jsonObject.getInt("student_id"));
             userdetails.setEmail(jsonObject.getString("email"));
-            userdetails.setStudent_department(jsonObject.getString("student_department"));
+            userdetails.setDepartment(jsonObject.getString("department"));
             userdetails.setFull_name(jsonObject.getString("full_name"));
             userdetails.setOffering_id(jsonObject.getInt("offering_id"));
             userdetails.setImage_path(jsonObject.getString("image_path"));

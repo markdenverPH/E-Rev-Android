@@ -8,19 +8,19 @@
             android:title="Home" />
         <item
             android:id="@+id/nav_grade"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_grade_black_24dp"
             android:title="Grade Assessment" />
         <item
             android:id="@+id/nav_courseware"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_courseware_black_24dp"
             android:title="Courseware" />
         <item
             android:id="@+id/nav_schedule"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_schedule_black_24dp"
             android:title="Schedule" />
         <item
             android:id="@+id/nav_feedback"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_comment_black_24dp"
             android:title="Feedback" />
     </group>
     <group>

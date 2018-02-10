@@ -1,12 +1,20 @@
 package com.example.babar.e_rev;
 
+import java.util.ArrayList;
+
 /**
  * Created by babar on 2/3/2018.
  */
 
 public class UserDetails {
     int student_id, offering_id;
-    String full_name, username, password, email, student_department, image_path, identifier;
+    String full_name, username, password, email, department, image_path, identifier;
+    ArrayList<String> announcement_title;
+    ArrayList<String> announcement_content;
+    ArrayList<String> announcement_created_at;
+    ArrayList<String> announcement_end_datetime;
+    ArrayList<String> announcement_start_datetime;
+    ArrayList<String> announcement_announcer;
 
     public String getIdentifier() {
         return identifier;
@@ -64,19 +72,19 @@ public class UserDetails {
         this.email = email;
     }
 
-    public String getStudent_department() {
-        return student_department;
-    }
-
-    public void setStudent_department(String student_department) {
-        this.student_department = student_department;
-    }
-
     public String getImage_path() {
         return image_path;
     }
 
     public void setImage_path(String image_path) {
         this.image_path = image_path;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }
