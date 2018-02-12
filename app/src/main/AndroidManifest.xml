@@ -28,6 +28,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.babar.e_rev.LoginActivity" />
         </activity>
+        <activity android:name=".AnnouncementDetail">
+            <!-- LAST! doing some parenting-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.babar.e_rev.LoginActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -7,14 +7,29 @@ import java.util.ArrayList;
  */
 
 public class UserDetails {
-    int student_id, offering_id;
-    String full_name, username, password, email, department, image_path, identifier;
-    ArrayList<String> announcement_title;
-    ArrayList<String> announcement_content;
-    ArrayList<String> announcement_created_at;
-    ArrayList<String> announcement_end_datetime;
-    ArrayList<String> announcement_start_datetime;
-    ArrayList<String> announcement_announcer;
+    public static int student_id, offering_id;
+    public static String full_name, username, password, email, department, image_path, identifier;
+    public static ArrayList<String> announcement_title = new ArrayList<>();
+    public static ArrayList<String> announcement_content = new ArrayList<>();
+    public static ArrayList<String> announcement_created_at = new ArrayList<>();
+    public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
+    public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
+    public static ArrayList<String> announcement_announcer = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "UserDetails{" +
+                "student_id=" + student_id +
+                ", offering_id=" + offering_id +
+                ", full_name='" + full_name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", department='" + department + '\'' +
+                ", image_path='" + image_path + '\'' +
+                ", identifier='" + identifier + '\'' +
+                '}';
+    }
 
     public String getIdentifier() {
         return identifier;

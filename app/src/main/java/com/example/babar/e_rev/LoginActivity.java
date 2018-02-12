@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
 //        }
 //        base = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        base = "192.168.254.101";           //emulator or cphone cable
+        base = "192.168.1.6";           //emulator or cphone cable
 //        base = "localhost";
     }
 
@@ -167,9 +167,10 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                intent.putExtra("test", "hey");
                 intent.putExtra("student_id", userdetails.getStudent_id());
                 intent.putExtra("email", userdetails.getEmail());
-                intent.putExtra("department", userdetails.getDepartment());
+                intent.putExtra("student_department", userdetails.getDepartment());
                 intent.putExtra("full_name", userdetails.getFull_name());
                 intent.putExtra("offering_id", userdetails.getOffering_id());
                 intent.putExtra("image_path", userdetails.getImage_path());
@@ -187,13 +188,14 @@ public class LoginActivity extends AppCompatActivity {
 
             userdetails.setStudent_id(jsonObject.getInt("student_id"));
             userdetails.setEmail(jsonObject.getString("email"));
-            userdetails.setDepartment(jsonObject.getString("department"));
+            userdetails.setDepartment(jsonObject.getString("student_department"));
             userdetails.setFull_name(jsonObject.getString("full_name"));
             userdetails.setOffering_id(jsonObject.getInt("offering_id"));
             userdetails.setImage_path(jsonObject.getString("image_path"));
             userdetails.setIdentifier(jsonObject.getString("identifier"));
+
         } catch (Exception e) {
-            Log.i("check", String.valueOf(e));
+            Log.i("loginerror", String.valueOf(e));
         }
     }
 

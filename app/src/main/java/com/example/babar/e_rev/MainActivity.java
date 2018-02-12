@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     final String key_user = "username";
     final String key_pass = "password";
     int current_menu = R.id.nav_home;
+    UserDetails userDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +59,19 @@ public class MainActivity extends AppCompatActivity
         nav_full_name = (TextView) v.findViewById(R.id.nav_full_name);
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
 
-        UserDetails userDetails = new UserDetails();
-        Intent intent = getIntent();
-        userDetails.setStudent_id(intent.getIntExtra("student_id", -1));
-        userDetails.setEmail(intent.getStringExtra("email"));
-        userDetails.setDepartment(intent.getStringExtra("department"));
-        userDetails.setFull_name(intent.getStringExtra("full_name"));
-        userDetails.setOffering_id(intent.getIntExtra("offering_id", -1));
-        userDetails.setImage_path(intent.getStringExtra("image_path"));
-        userDetails.setIdentifier(intent.getStringExtra("identifier"));
+        userDetails = new UserDetails();
+        Bundle intent = getIntent().getExtras();
+        userDetails.setStudent_id(intent.getInt("student_id"));
+        userDetails.setEmail(intent.getString("email"));
+        userDetails.setDepartment(intent.getString("student_department"));
+        userDetails.setFull_name(intent.getString("full_name"));
+        userDetails.setOffering_id(intent.getInt("offering_id"));
+        userDetails.setImage_path(intent.getString("image_path"));
+        userDetails.setIdentifier(intent.getString("identifier"));
 
         nav_full_name.setText(userDetails.getFull_name());
+//        Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_SHORT).show();
+
         String temp = userDetails.getIdentifier().substring(0, 1).toUpperCase() + userDetails.getIdentifier().substring(1);
         nav_user_role.setText(temp);
 

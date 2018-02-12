@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class HomeFragment extends Fragment {
     }*/
     SwipeRefreshLayout swipeRefreshLayout;
     String base;
-    UserDetails userDetails;
+    public UserDetails userDetails;
     JSONArray jsonArray;
     JSONObject jsonObject;
     ListView lv;
@@ -56,14 +57,22 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        base = "192.168.254.101";
-
+        base = "192.168.1.6";
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
         lv = (ListView) rootView.findViewById(R.id.lv_announce);
-
+        new announcement().execute();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new announcement().execute();
+            }
+        });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), AnnouncementDetail.class);
+                startActivity(intent);
             }
         });
 
@@ -72,8 +81,8 @@ public class HomeFragment extends Fragment {
         return rootView;
     }
 
+
     class announcement extends AsyncTask<Void, Void, String> {
-        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
@@ -92,6 +101,7 @@ public class HomeFragment extends Fragment {
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 
                 ContentValues cv = new ContentValues();
+
                 cv.put("department", userDetails.getDepartment());
                 bw.write(createPostString(cv));
                 bw.flush();
@@ -112,8 +122,7 @@ public class HomeFragment extends Fragment {
                 con.disconnect();
                 return sb.toString();
             } catch (Exception e) {     //error logs
-                Log.d("check", e.toString());
-                dialog.dismiss();
+                Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }
             return "";
         }
@@ -130,26 +139,30 @@ public class HomeFragment extends Fragment {
             jsonObject = new JSONObject(strJSON);
             jsonArray = jsonObject.getJSONArray("result");
             int i = 0;
+            userDetails.announcement_title.clear();
+            userDetails.announcement_content.clear();
+            userDetails.announcement_created_at.clear();
+            userDetails.announcement_end_datetime.clear();
+            userDetails.announcement_start_datetime.clear();
+            userDetails.announcement_announcer.clear();
 
             while (jsonArray.length() > i) {
                 jsonObject = jsonArray.getJSONObject(i);
-                userDetails.announcement_title.add(jsonObject.getString("announcement_title"));
+                userDetails.announcement_title.add(i, jsonObject.getString("announcement_title"));
                 userDetails.announcement_content.add(jsonObject.getString("announcement_content"));
                 userDetails.announcement_created_at.add(jsonObject.getString("announcement_created_at"));
                 userDetails.announcement_end_datetime.add(jsonObject.getString("announcement_end_datetime"));
                 userDetails.announcement_start_datetime.add(jsonObject.getString("announcement_start_datetime"));
                 userDetails.announcement_announcer.add(jsonObject.getString("announcement_announcer"));
-
                 i++;
             }
 
             BaseAdapter mAdapter;
             mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
-                    userDetails.announcement_created_at, userDetails.announcement_end_datetime,
-                    userDetails.announcement_start_datetime, userDetails.announcement_announcer);
+                    userDetails.announcement_created_at);
             lv.setAdapter(mAdapter);
         } catch (Exception e) {
-            Log.i("check", String.valueOf(e));
+            Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }
     }
 
