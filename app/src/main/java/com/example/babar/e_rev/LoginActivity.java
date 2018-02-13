@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     ArrayList user_data;
     JSONArray jsonArray;
     JSONObject jsonObject;
-    UserDetails userdetails;
+    UserDetails userDetails;
     String base, user_hold, pass_hold;
     CheckBox remember;
     SharedPreferences sp;
@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.pass);
         remember = (CheckBox) findViewById(R.id.cb_remember);
-        userdetails = new UserDetails();
+        userDetails = new UserDetails();
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.edit().remove(key_pass).apply();
         sp.edit().remove(key_user).apply();
@@ -85,8 +85,13 @@ public class LoginActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
 //        }
 //        base = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        base = "192.168.1.6";           //emulator or cphone cable
-//        base = "localhost";
+        base = userDetails.getBase();
+
+
+        //FOR TEMPORARY USE | FASTER TESTING
+        user_hold = "mgbabaran";
+        pass_hold = "mark";
+        new fetch_login().execute();
     }
 
     public void login(View v) {
@@ -168,13 +173,13 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                intent.putExtra("test", "hey");
-                intent.putExtra("student_id", userdetails.getStudent_id());
-                intent.putExtra("email", userdetails.getEmail());
-                intent.putExtra("student_department", userdetails.getDepartment());
-                intent.putExtra("full_name", userdetails.getFull_name());
-                intent.putExtra("offering_id", userdetails.getOffering_id());
-                intent.putExtra("image_path", userdetails.getImage_path());
-                intent.putExtra("identifier", userdetails.getIdentifier());
+//                intent.putExtra("student_id", userDetails.getStudent_id());
+//                intent.putExtra("email", userDetails.getEmail());
+//                intent.putExtra("student_department", userDetails.getDepartment());
+//                intent.putExtra("full_name", userDetails.getFull_name());
+//                intent.putExtra("offering_id", userDetails.getOffering_id());
+//                intent.putExtra("image_path", userDetails.getImage_path());
+//                intent.putExtra("identifier", userDetails.getIdentifier());
                 startActivity(intent);
             }
         }
@@ -186,13 +191,13 @@ public class LoginActivity extends AppCompatActivity {
             jsonArray = jsonObject.getJSONArray("result");
             jsonObject = jsonArray.getJSONObject(0);
 
-            userdetails.setStudent_id(jsonObject.getInt("student_id"));
-            userdetails.setEmail(jsonObject.getString("email"));
-            userdetails.setDepartment(jsonObject.getString("student_department"));
-            userdetails.setFull_name(jsonObject.getString("full_name"));
-            userdetails.setOffering_id(jsonObject.getInt("offering_id"));
-            userdetails.setImage_path(jsonObject.getString("image_path"));
-            userdetails.setIdentifier(jsonObject.getString("identifier"));
+            userDetails.setStudent_id(jsonObject.getInt("student_id"));
+            userDetails.setEmail(jsonObject.getString("email"));
+            userDetails.setDepartment(jsonObject.getString("student_department"));
+            userDetails.setFull_name(jsonObject.getString("full_name"));
+            userDetails.setOffering_id(jsonObject.getInt("offering_id"));
+            userDetails.setImage_path(jsonObject.getString("image_path"));
+            userDetails.setIdentifier(jsonObject.getString("identifier"));
 
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));

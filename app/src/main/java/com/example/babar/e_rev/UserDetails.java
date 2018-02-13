@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class UserDetails {
-    public static int student_id, offering_id;
+    public static int student_id, offering_id, ad_item;
     public static String full_name, username, password, email, department, image_path, identifier;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
@@ -15,6 +15,7 @@ public class UserDetails {
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
+    static String base = "172.16.86.42";
 
     @Override
     public String toString() {
@@ -29,6 +30,22 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public static int getAd_item() {
+        return ad_item;
+    }
+
+    public static void setAd_item(int ad_item) {
+        UserDetails.ad_item = ad_item;
+    }
+
+    public static String getBase() {
+        return base;
+    }
+
+    public void setBase(String base) {
+        this.base = base;
     }
 
     public String getIdentifier() {

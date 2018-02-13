@@ -57,7 +57,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        base = "192.168.1.6";
+        base = userDetails.getBase();
+
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
         lv = (ListView) rootView.findViewById(R.id.lv_announce);
         new announcement().execute();
@@ -72,7 +73,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), AnnouncementDetail.class);
-                startActivity(intent);
+                userDetails.setAd_item(position);
+                getActivity().startActivity(intent);
             }
         });
 
@@ -159,7 +161,7 @@ public class HomeFragment extends Fragment {
 
             BaseAdapter mAdapter;
             mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
-                    userDetails.announcement_created_at);
+                    userDetails.announcement_created_at, userDetails.announcement_announcer);
             lv.setAdapter(mAdapter);
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));

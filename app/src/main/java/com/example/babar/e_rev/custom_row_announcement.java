@@ -18,14 +18,16 @@ public class custom_row_announcement extends BaseAdapter {
     ArrayList<String> announcement_title = new ArrayList<>();
     ArrayList<String> announcement_content = new ArrayList<>();
     ArrayList<String> announcement_created_at = new ArrayList<>();
-    TextView title, content, date;
+    ArrayList<String> announcement_announcer = new ArrayList<>();
+    TextView title, content, date, announcer;
     private static LayoutInflater inflater = null;
 
     public custom_row_announcement(@NonNull Context context, ArrayList<String> announcement_title, ArrayList<String> announcement_content,
-                                   ArrayList<String> announcement_created_at) {
+                                   ArrayList<String> announcement_created_at, ArrayList<String> announcement_announcer) {
         this.announcement_title = announcement_title;
         this.announcement_content = announcement_content;
         this.announcement_created_at = announcement_created_at;
+        this.announcement_announcer = announcement_announcer;
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -37,10 +39,12 @@ public class custom_row_announcement extends BaseAdapter {
         title = (TextView) rowView.findViewById(R.id.title);
         content = (TextView) rowView.findViewById(R.id.subtitle);
         date = (TextView) rowView.findViewById(R.id.date);
+        announcer = (TextView) rowView.findViewById(R.id.announcer);
 
         title.setText(announcement_title.get(position));
-        content.setText(announcement_content.get(position));
         date.setText(announcement_created_at.get(position));
+        announcer.setText(announcement_announcer.get(position));
+        content.setText(" — " + announcement_content.get(position));
         return rowView;
     }
 

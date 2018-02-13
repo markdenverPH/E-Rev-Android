@@ -12,6 +12,16 @@
         <item name="off_gold">@color/off_gold</item>
     </style>
 
+    <style name="AppTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="off_green">@color/off_green</item>
+        <item name="off_gold">@color/off_gold</item>
+    </style>
+
 
     //login
 

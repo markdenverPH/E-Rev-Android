@@ -58,27 +58,15 @@ public class MainActivity extends AppCompatActivity
         View v = navigationView.getHeaderView(0);
         nav_full_name = (TextView) v.findViewById(R.id.nav_full_name);
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
-
-        userDetails = new UserDetails();
-        Bundle intent = getIntent().getExtras();
-        userDetails.setStudent_id(intent.getInt("student_id"));
-        userDetails.setEmail(intent.getString("email"));
-        userDetails.setDepartment(intent.getString("student_department"));
-        userDetails.setFull_name(intent.getString("full_name"));
-        userDetails.setOffering_id(intent.getInt("offering_id"));
-        userDetails.setImage_path(intent.getString("image_path"));
-        userDetails.setIdentifier(intent.getString("identifier"));
-
-        nav_full_name.setText(userDetails.getFull_name());
 //        Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_SHORT).show();
-
+        userDetails = new UserDetails();
+        nav_full_name.setText(userDetails.getFull_name());
         String temp = userDetails.getIdentifier().substring(0, 1).toUpperCase() + userDetails.getIdentifier().substring(1);
         nav_user_role.setText(temp);
 
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //default nav
         if (savedInstanceState == null) {
-
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
@@ -139,28 +127,33 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, gradeAssessmentFragment);
                 this.setTitle("Grade Assessment");
+                fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_courseware) {
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, coursewareFragment);
                 this.setTitle("Courseware");
+                fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_schedule) {
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, scheduleFragment);
                 this.setTitle("Schedule");
+                fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_feedback) {
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, feedbackFragment);
                 this.setTitle("Feedback");
+                fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_logout) {
                 sharedpreferences = getPreferences(MODE_PRIVATE);
                 editor = sharedpreferences.edit();
                 sharedpreferences.edit().remove(key_pass).apply();
                 sharedpreferences.edit().remove(key_user).apply();
                 finish();
+                fragmentTransaction.addToBackStack(null);
             }
 //            Toast.makeText(getApplicationContext(), "id: " + id + " current: " + current_menu, Toast.LENGTH_LONG).show();
             current_menu = id;
-            fragmentTransaction.addToBackStack(null);
+
             fragmentTransaction.commit();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
