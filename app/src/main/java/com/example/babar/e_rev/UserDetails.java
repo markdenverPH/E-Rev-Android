@@ -15,7 +15,7 @@ public class UserDetails {
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
-    static String base = "172.16.86.42";
+    static String base = "192.168.1.4";
 
     @Override
     public String toString() {

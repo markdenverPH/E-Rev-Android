@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,8 +28,6 @@ public class MainActivity extends AppCompatActivity
     public FeedbackFragment feedbackFragment = new FeedbackFragment();
     NavigationView navigationView;
     TextView nav_full_name, nav_user_role;
-    SharedPreferences sharedpreferences;
-    SharedPreferences.Editor editor;
     final String key_user = "username";
     final String key_pass = "password";
     int current_menu = R.id.nav_home;
@@ -64,7 +60,6 @@ public class MainActivity extends AppCompatActivity
         String temp = userDetails.getIdentifier().substring(0, 1).toUpperCase() + userDetails.getIdentifier().substring(1);
         nav_user_role.setText(temp);
 
-        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
         //default nav
         if (savedInstanceState == null) {
             fragmentManager = getFragmentManager();
@@ -144,12 +139,9 @@ public class MainActivity extends AppCompatActivity
                 this.setTitle("Feedback");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_logout) {
-                sharedpreferences = getPreferences(MODE_PRIVATE);
-                editor = sharedpreferences.edit();
-                sharedpreferences.edit().remove(key_pass).apply();
-                sharedpreferences.edit().remove(key_user).apply();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
                 finish();
-                fragmentTransaction.addToBackStack(null);
             }
 //            Toast.makeText(getApplicationContext(), "id: " + id + " current: " + current_menu, Toast.LENGTH_LONG).show();
             current_menu = id;

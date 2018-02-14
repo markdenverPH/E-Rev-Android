@@ -24,7 +24,7 @@ public class AnnouncementDetail extends AppCompatActivity {
 
         title.setText(userDetails.announcement_title.get(item_pos));
         date.setText(userDetails.announcement_created_at.get(item_pos));
-        content.setText("- " + userDetails.announcement_content.get(item_pos));
+        content.setText("— " + userDetails.announcement_content.get(item_pos));
 
     }
 }

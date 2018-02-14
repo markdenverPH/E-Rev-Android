@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -50,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     UserDetails userDetails;
     String base, user_hold, pass_hold;
     CheckBox remember;
-    SharedPreferences sp;
-    SharedPreferences.Editor editor;
     final String key_user = "username";
     final String key_pass = "password";
     LinearLayout intro;
@@ -62,22 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.pass);
-        remember = (CheckBox) findViewById(R.id.cb_remember);
         userDetails = new UserDetails();
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        sp.edit().remove(key_pass).apply();
-        sp.edit().remove(key_user).apply();
-        if (sp.getString(key_user, "") != "" && sp.getString(key_pass, "") != "") {
-            user_hold = sp.getString(key_user, "");
-            pass_hold = sp.getString(key_pass, "");
-            new fetch_login().execute();
-        } else {
-            intro = (LinearLayout) findViewById(R.id.intro_layout);
-            intro.setVisibility(View.GONE);
-        }
 
-        remember = (CheckBox) findViewById(R.id.cb_remember);
-//
 //        WifiManager wifi = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 //        if (wifi.isWifiEnabled()) {
 //            Toast.makeText(getApplicationContext(), "Wifi is ENABLED", Toast.LENGTH_SHORT).show();
@@ -89,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-        user_hold = "mgbabaran";
-        pass_hold = "mark";
-        new fetch_login().execute();
+//        user_hold = "mgbabaran";
+//        pass_hold = "mark";
+//        new fetch_login().execute();
     }
 
     public void login(View v) {
@@ -162,25 +144,12 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_SHORT).show();
             } else {
-                if (remember.isChecked()) {
-                    editor = sp.edit();
-                    editor.putString(key_user, username.getText().toString());
-                    editor.putString(key_pass, password.getText().toString());
-                    editor.apply();
-                }
                 parseJSON(strJSON);
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                intent.putExtra("test", "hey");
-//                intent.putExtra("student_id", userDetails.getStudent_id());
-//                intent.putExtra("email", userDetails.getEmail());
-//                intent.putExtra("student_department", userDetails.getDepartment());
-//                intent.putExtra("full_name", userDetails.getFull_name());
-//                intent.putExtra("offering_id", userDetails.getOffering_id());
-//                intent.putExtra("image_path", userDetails.getImage_path());
-//                intent.putExtra("identifier", userDetails.getIdentifier());
                 startActivity(intent);
+                finish();
             }
         }
     }
