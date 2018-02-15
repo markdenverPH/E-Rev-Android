@@ -14,8 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     final String key_pass = "password";
     int current_menu = R.id.nav_home;
     UserDetails userDetails;
+    ImageView nav_profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +66,24 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
             navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_schedule).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_courseware).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
         View v = navigationView.getHeaderView(0);
         nav_full_name = (TextView) v.findViewById(R.id.nav_full_name);
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
+        nav_profile = (ImageView) v.findViewById(R.id.nav_profile);
 //        Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_SHORT).show();
         userDetails = new UserDetails();
         nav_full_name.setText(userDetails.getFull_name());
         nav_user_role.setText(userDetails.getIdentifier());
+        Toast.makeText(getApplicationContext(), userDetails.getImage_path(), Toast.LENGTH_SHORT).show();
+        Picasso.with(v.getContext())
+                .load(userDetails.getBase() + userDetails.getImage_path())
+                .into(nav_profile);
 
         //default nav
         if (savedInstanceState == null) {
@@ -94,6 +106,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
             navigationView.setCheckedItem(R.id.nav_home);
             this.setTitle("Home");
+            current_menu = R.id.nav_home;
         }
     }
 //

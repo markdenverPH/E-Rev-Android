@@ -15,7 +15,7 @@ public class UserDetails {
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
-    static String base = "172.16.86.42";
+    static String base = "http://192.168.1.7/Engineering/";
 
     @Override
     public String toString() {
@@ -64,7 +64,7 @@ public class UserDetails {
         this.base = base;
     }
 
-    public String getIdentifier() {
+    public static String getIdentifier() {
         return identifier;
     }
 

@@ -71,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-        user_hold = "riza";
-        pass_hold = "riza";
-        new fetch_login().execute();
+//        user_hold = "riza";
+//        pass_hold = "riza";
+//        new fetch_login().execute();
     }
 
     public void login(View v) {
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("http://" + base + "/Engineering/mobile/login");
+                URL url = new URL(base + "mobile/login");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -161,15 +161,16 @@ public class LoginActivity extends AppCompatActivity {
             jsonArray = jsonObject.getJSONArray("result");
             jsonObject = jsonArray.getJSONObject(0);
 
+//            Toast.makeText(getApplicationContext(), jsonObject.getString("identifier"), Toast.LENGTH_LONG).show();
             userDetails.setIdentifier(jsonObject.getString("identifier"));
-            if (userDetails.getIdentifier().equalsIgnoreCase("Student")) {
+            if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
                 userDetails.setStudent_id(jsonObject.getInt("student_id"));
                 userDetails.setEmail(jsonObject.getString("email"));
                 userDetails.setDepartment(jsonObject.getString("student_department"));
                 userDetails.setFull_name(jsonObject.getString("full_name"));
                 userDetails.setOffering_id(jsonObject.getInt("offering_id"));
                 userDetails.setImage_path(jsonObject.getString("image_path"));
-            } else if (userDetails.getIdentifier().equalsIgnoreCase("Faculty in Charge")) {
+            } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                 userDetails.setFic_id(jsonObject.getInt("fic_id"));
                 userDetails.setFull_name(jsonObject.getString("full_name"));
                 userDetails.setEmail(jsonObject.getString("email"));
@@ -177,8 +178,6 @@ public class LoginActivity extends AppCompatActivity {
                 userDetails.setDepartment(jsonObject.getString("fic_department"));
                 userDetails.setFic_status(jsonObject.getInt("fic_status"));
             }
-
-
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
         }
