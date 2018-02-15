@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -51,14 +52,26 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //determines the menu items to be shown depending on identifier
+        if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+            navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_schedule).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_courseware).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+            navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+        }
         View v = navigationView.getHeaderView(0);
         nav_full_name = (TextView) v.findViewById(R.id.nav_full_name);
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
 //        Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_SHORT).show();
         userDetails = new UserDetails();
         nav_full_name.setText(userDetails.getFull_name());
-        String temp = userDetails.getIdentifier().substring(0, 1).toUpperCase() + userDetails.getIdentifier().substring(1);
-        nav_user_role.setText(temp);
+        nav_user_role.setText(userDetails.getIdentifier());
 
         //default nav
         if (savedInstanceState == null) {

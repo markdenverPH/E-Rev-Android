@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class UserDetails {
-    public static int student_id, offering_id, ad_item;
+    public static int student_id, offering_id, ad_item, fic_id, fic_status;
     public static String full_name, username, password, email, department, image_path, identifier;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
@@ -15,7 +15,7 @@ public class UserDetails {
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
-    static String base = "192.168.1.4";
+    static String base = "172.16.86.42";
 
     @Override
     public String toString() {
@@ -30,6 +30,22 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public static int getFic_status() {
+        return fic_status;
+    }
+
+    public static void setFic_status(int fic_status) {
+        UserDetails.fic_status = fic_status;
+    }
+
+    public static int getFic_id() {
+        return fic_id;
+    }
+
+    public static void setFic_id(int fic_id) {
+        UserDetails.fic_id = fic_id;
     }
 
     public static int getAd_item() {

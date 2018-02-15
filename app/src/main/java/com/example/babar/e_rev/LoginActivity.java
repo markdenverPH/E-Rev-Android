@@ -71,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-//        user_hold = "mgbabaran";
-//        pass_hold = "mark";
-//        new fetch_login().execute();
+        user_hold = "riza";
+        pass_hold = "riza";
+        new fetch_login().execute();
     }
 
     public void login(View v) {
@@ -148,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_LONG).show();
                 startActivity(intent);
                 finish();
             }
@@ -160,13 +161,23 @@ public class LoginActivity extends AppCompatActivity {
             jsonArray = jsonObject.getJSONArray("result");
             jsonObject = jsonArray.getJSONObject(0);
 
-            userDetails.setStudent_id(jsonObject.getInt("student_id"));
-            userDetails.setEmail(jsonObject.getString("email"));
-            userDetails.setDepartment(jsonObject.getString("student_department"));
-            userDetails.setFull_name(jsonObject.getString("full_name"));
-            userDetails.setOffering_id(jsonObject.getInt("offering_id"));
-            userDetails.setImage_path(jsonObject.getString("image_path"));
             userDetails.setIdentifier(jsonObject.getString("identifier"));
+            if (userDetails.getIdentifier().equalsIgnoreCase("Student")) {
+                userDetails.setStudent_id(jsonObject.getInt("student_id"));
+                userDetails.setEmail(jsonObject.getString("email"));
+                userDetails.setDepartment(jsonObject.getString("student_department"));
+                userDetails.setFull_name(jsonObject.getString("full_name"));
+                userDetails.setOffering_id(jsonObject.getInt("offering_id"));
+                userDetails.setImage_path(jsonObject.getString("image_path"));
+            } else if (userDetails.getIdentifier().equalsIgnoreCase("Faculty in Charge")) {
+                userDetails.setFic_id(jsonObject.getInt("fic_id"));
+                userDetails.setFull_name(jsonObject.getString("full_name"));
+                userDetails.setEmail(jsonObject.getString("email"));
+                userDetails.setImage_path(jsonObject.getString("image_path"));
+                userDetails.setDepartment(jsonObject.getString("fic_department"));
+                userDetails.setFic_status(jsonObject.getInt("fic_status"));
+            }
+
 
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
