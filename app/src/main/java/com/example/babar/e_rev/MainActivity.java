@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity
     public FeedbackFragment feedbackFragment = new FeedbackFragment();
     NavigationView navigationView;
     TextView nav_full_name, nav_user_role;
-    final String key_user = "username";
-    final String key_pass = "password";
     int current_menu = R.id.nav_home;
     UserDetails userDetails;
     ImageView nav_profile;

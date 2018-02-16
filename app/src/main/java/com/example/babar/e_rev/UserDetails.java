@@ -8,13 +8,16 @@ import java.util.ArrayList;
 
 public class UserDetails {
     public static int student_id, offering_id, ad_item, fic_id, fic_status;
-    public static String full_name, username, password, email, department, image_path, identifier;
+    public static String full_name, username, password, email, department, image_path, identifier, feedback_content;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
     public static ArrayList<String> announcement_created_at = new ArrayList<>();
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
+    public static ArrayList<String> feedback_lect = new ArrayList<>();
+    public static ArrayList<Integer> feedback_offering_id = new ArrayList<>();
+    public static ArrayList<Integer> feedback_done = new ArrayList<>();
     static String base = "http://192.168.1.7/Engineering/";
 
     @Override
@@ -30,6 +33,14 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public static String getFeedback_content() {
+        return feedback_content;
+    }
+
+    public static void setFeedback_content(String feedback_content) {
+        UserDetails.feedback_content = feedback_content;
     }
 
     public static int getFic_status() {
