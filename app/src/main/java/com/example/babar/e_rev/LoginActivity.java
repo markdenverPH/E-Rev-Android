@@ -71,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-//        user_hold = "riza";
-//        pass_hold = "riza";
-//        new fetch_login().execute();
+        user_hold = "mgbabaran";
+        pass_hold = "mark";
+        new fetch_login().execute();
     }
 
     public void login(View v) {
@@ -178,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                 userDetails.setDepartment(jsonObject.getString("fic_department"));
                 userDetails.setFic_status(jsonObject.getInt("fic_status"));
             }
+            Log.d("userdetails", userDetails.toString());
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
         }

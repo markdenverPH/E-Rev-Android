@@ -1,16 +1,31 @@
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.babar.e_rev.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-
-    <ListView
-        android:id="@+id/lv_announce"
+    <TextView
+        android:id="@+id/tv_no_announcements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:smoothScrollbar="false" />
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:gravity="center"
+        android:text="No announcements"
+        android:textSize="18sp" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swiperefresh">
+
+        <ListView
+            android:id="@+id/lv_announce"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:smoothScrollbar="false">
+
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

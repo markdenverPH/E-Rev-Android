@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
         userDetails = new UserDetails();
         nav_full_name.setText(userDetails.getFull_name());
         nav_user_role.setText(userDetails.getIdentifier());
-        Toast.makeText(getApplicationContext(), userDetails.getImage_path(), Toast.LENGTH_SHORT).show();
         Picasso.with(v.getContext())
                 .load(userDetails.getBase() + userDetails.getImage_path())
                 .into(nav_profile);

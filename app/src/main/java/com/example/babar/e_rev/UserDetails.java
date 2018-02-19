@@ -18,7 +18,7 @@ public class UserDetails {
     public static ArrayList<String> feedback_lect = new ArrayList<>();
     public static ArrayList<Integer> feedback_offering_id = new ArrayList<>();
     public static ArrayList<Integer> feedback_done = new ArrayList<>();
-    static String base = "http://192.168.1.7/Engineering/";
+    static String base = "http://192.168.137.1/Engineering/";
 
     @Override
     public String toString() {

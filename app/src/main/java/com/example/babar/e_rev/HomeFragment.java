@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -51,16 +52,19 @@ public class HomeFragment extends Fragment {
     JSONArray jsonArray;
     JSONObject jsonObject;
     ListView lv;
+    TextView no_announcements;
+    View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
         base = userDetails.getBase();
-
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
         lv = (ListView) rootView.findViewById(R.id.lv_announce);
+        no_announcements = (TextView) rootView.findViewById(R.id.tv_no_announcements);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
+
         new announcement().execute();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,12 +93,13 @@ public class HomeFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL("http://" + base + "/Engineering/mobile/announcement");
+                URL url = new URL(base + "mobile/announcement");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -131,6 +136,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String strJSON) {
+            Log.d("strJSON", strJSON);
             parseJSON(strJSON);
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -138,9 +144,6 @@ public class HomeFragment extends Fragment {
 
     public void parseJSON(String strJSON) {
         try {
-            jsonObject = new JSONObject(strJSON);
-            jsonArray = jsonObject.getJSONArray("result");
-            int i = 0;
             userDetails.announcement_title.clear();
             userDetails.announcement_content.clear();
             userDetails.announcement_created_at.clear();
@@ -148,21 +151,33 @@ public class HomeFragment extends Fragment {
             userDetails.announcement_start_datetime.clear();
             userDetails.announcement_announcer.clear();
 
-            while (jsonArray.length() > i) {
-                jsonObject = jsonArray.getJSONObject(i);
-                userDetails.announcement_title.add(i, jsonObject.getString("announcement_title"));
-                userDetails.announcement_content.add(jsonObject.getString("announcement_content"));
-                userDetails.announcement_created_at.add(jsonObject.getString("announcement_created_at"));
-                userDetails.announcement_end_datetime.add(jsonObject.getString("announcement_end_datetime"));
-                userDetails.announcement_start_datetime.add(jsonObject.getString("announcement_start_datetime"));
-                userDetails.announcement_announcer.add(jsonObject.getString("announcement_announcer"));
-                i++;
-            }
+            if (strJSON == "") { //if empty json
+                lv.setVisibility(View.GONE);
+                no_announcements.setVisibility(View.VISIBLE);
+                lv.setAdapter(null);
+            } else {
+                jsonObject = new JSONObject(strJSON);
+                jsonArray = jsonObject.getJSONArray("result");
+                int i = 0;
 
-            BaseAdapter mAdapter;
-            mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
-                    userDetails.announcement_created_at, userDetails.announcement_announcer);
-            lv.setAdapter(mAdapter);
+                while (jsonArray.length() > i) {
+                    jsonObject = jsonArray.getJSONObject(i);
+                    userDetails.announcement_title.add(i, jsonObject.getString("announcement_title"));
+                    userDetails.announcement_content.add(jsonObject.getString("announcement_content"));
+                    userDetails.announcement_created_at.add(jsonObject.getString("announcement_created_at"));
+                    userDetails.announcement_end_datetime.add(jsonObject.getString("announcement_end_datetime"));
+                    userDetails.announcement_start_datetime.add(jsonObject.getString("announcement_start_datetime"));
+                    userDetails.announcement_announcer.add(jsonObject.getString("announcement_announcer"));
+                    i++;
+                }
+                no_announcements.setVisibility(View.GONE);
+                lv.setVisibility(View.VISIBLE);
+                BaseAdapter mAdapter;
+                mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
+                        userDetails.announcement_created_at, userDetails.announcement_announcer);
+                lv.setAdapter(mAdapter);
+            }
+            
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }
