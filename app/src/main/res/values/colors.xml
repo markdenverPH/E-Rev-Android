@@ -6,6 +6,6 @@
 
     <color name="off_green">#007a33</color>
     <color name="off_gold">#f2a900</color>
-    <color name="bg_color">#F5F5DC</color>
+    <color name="bg_color">#f5f5dc</color>
     <color name="nav_text">#2c3e50</color>
 </resources>

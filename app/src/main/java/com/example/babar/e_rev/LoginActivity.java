@@ -47,10 +47,6 @@ public class LoginActivity extends AppCompatActivity {
     JSONObject jsonObject;
     UserDetails userDetails;
     String base, user_hold, pass_hold;
-    CheckBox remember;
-    final String key_user = "username";
-    final String key_pass = "password";
-    LinearLayout intro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-        user_hold = "mgbabaran";
-        pass_hold = "mark";
+        user_hold = "nobaluyut";
+        pass_hold = "nobaluyut";
         new fetch_login().execute();
     }
 
@@ -146,7 +142,6 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 parseJSON(strJSON);
                 dialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Successful Login", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_LONG).show();
                 startActivity(intent);

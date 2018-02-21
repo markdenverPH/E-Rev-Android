@@ -2,6 +2,7 @@ package com.example.babar.e_rev;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +62,20 @@ public class FeedbackFragment extends Fragment {
                 new feedback().execute();
             }
         });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (userDetails.feedback_done.get(position) == 1) {         //means feedback is done
+                    Toast.makeText(getActivity(), "Feedback already submitted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), FeedbackSend.class);
+                    userDetails.setAd_item(position);
+                    getActivity().startActivity(intent);
+                }
+            }
+        });
+
 
         new feedback().execute();
         return view;
@@ -132,34 +148,41 @@ public class FeedbackFragment extends Fragment {
         try {
             jsonObject = new JSONObject(strJSON);
             int i = 0;
-            jsonArray = jsonObject.getJSONArray("result");
-            jsonObject = jsonArray.getJSONObject(i);
+
+            userDetails.feedback_done.clear();
+            userDetails.feedback_offering_name.clear();
+            userDetails.feedback_full_name.clear();
+            userDetails.feedback_image_path.clear();
+            userDetails.feedback_lect_id.clear();
+            userDetails.feedback_subject_name.clear();
 
             if (jsonObject.has("message")) {
+                lv.setVisibility(View.GONE);
+                tv_message.setVisibility(View.VISIBLE);
                 jsonArray = jsonObject.getJSONArray("message");
-                jsonObject = jsonArray.getJSONObject(i);
                 userDetails.feedback_content = jsonObject.getString("message_content");
+                tv_message.setText(userDetails.getFeedback_content());
             } else {
+                lv.setVisibility(View.VISIBLE);
+                tv_message.setVisibility(View.GONE);
                 jsonArray = jsonObject.getJSONArray("result");
-                userDetails.announcement_title.clear();
-                userDetails.announcement_content.clear();
-                userDetails.announcement_created_at.clear();
-                userDetails.announcement_end_datetime.clear();
-                userDetails.announcement_start_datetime.clear();
-                userDetails.announcement_announcer.clear();
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
-                    userDetails.feedback_done.add(jsonObject.getInt("announcement_content"));
-                    userDetails.feedback_offering_id.add(jsonObject.getInt("announcement_created_at"));
-                    userDetails.feedback_lect.add(jsonObject.getString("announcement_created_at"));
+                    userDetails.feedback_done.add(jsonObject.getInt("feedback_done"));
+                    userDetails.feedback_offering_name.add(jsonObject.getString("offering_name"));
+                    userDetails.feedback_full_name.add(jsonObject.getString("full_name"));
+                    userDetails.feedback_image_path.add(jsonObject.getString("image_path"));
+                    userDetails.feedback_lect_id.add(jsonObject.getInt("lecturer_id"));
+                    userDetails.feedback_subject_name.add(jsonObject.getString("subject_name"));
                     i++;
                 }
             }
 
-//            BaseAdapter mAdapter;
-//            mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
-//                    userDetails.announcement_created_at, userDetails.announcement_announcer);
-//            lv.setAdapter(mAdapter);
+            BaseAdapter mAdapter;
+            mAdapter = new custom_row_feedback(getActivity(), userDetails.feedback_subject_name, userDetails.feedback_image_path,
+                    userDetails.feedback_offering_name, userDetails.feedback_full_name, userDetails.feedback_lect_id,
+                    userDetails.feedback_done);
+            lv.setAdapter(mAdapter);
         } catch (Exception e) {
             Log.i("feedback_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }

@@ -74,23 +74,23 @@ public class MainActivity extends AppCompatActivity
         nav_full_name = (TextView) v.findViewById(R.id.nav_full_name);
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
         nav_profile = (ImageView) v.findViewById(R.id.nav_profile);
-//        Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_SHORT).show();
         userDetails = new UserDetails();
         nav_full_name.setText(userDetails.getFull_name());
-        nav_user_role.setText(userDetails.getIdentifier());
+        nav_user_role.setText(userDetails.getStudent_id() + " — " + userDetails.getIdentifier() + " — " + userDetails.getDepartment());
         Picasso.with(v.getContext())
                 .load(userDetails.getBase() + userDetails.getImage_path())
                 .into(nav_profile);
 
         //default nav
-        if (savedInstanceState == null) {
+        if (userDetails.getFrag_hold() == null) {
+            Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                     .replace(R.id.fragment_hold, homeFragment);
             fragmentTransaction.commit();
+            navigationView.setCheckedItem(R.id.nav_home);
         }
-        navigationView.setCheckedItem(R.id.nav_home);
         //end default nav
     }
 
@@ -138,25 +138,30 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction = fragmentManager.beginTransaction();
             getFragmentManager().popBackStack();
             if (id == R.id.nav_home) {
+                userDetails.setFrag_hold("Home");
 //            fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
 //                    .replace(R.id.fragment_hold, homeFragment);
                 this.setTitle("Home");
             } else if (id == R.id.nav_grade) {
+                userDetails.setFrag_hold("Grade Assessment");
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, gradeAssessmentFragment);
                 this.setTitle("Grade Assessment");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_courseware) {
+                userDetails.setFrag_hold("Courseware");
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, coursewareFragment);
                 this.setTitle("Courseware");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_schedule) {
+                userDetails.setFrag_hold("Schedule");
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, scheduleFragment);
                 this.setTitle("Schedule");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_feedback) {
+                userDetails.setFrag_hold("Feedback");
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, feedbackFragment);
                 this.setTitle("Feedback");

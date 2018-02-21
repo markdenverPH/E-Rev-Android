@@ -15,10 +15,14 @@ public class UserDetails {
     public static ArrayList<String> announcement_end_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_start_datetime = new ArrayList<>();
     public static ArrayList<String> announcement_announcer = new ArrayList<>();
-    public static ArrayList<String> feedback_lect = new ArrayList<>();
-    public static ArrayList<Integer> feedback_offering_id = new ArrayList<>();
+    public static ArrayList<String> feedback_full_name = new ArrayList<>();
+    public static ArrayList<String> feedback_offering_name = new ArrayList<>();
+    public static ArrayList<String> feedback_subject_name = new ArrayList<>();
     public static ArrayList<Integer> feedback_done = new ArrayList<>();
-    static String base = "http://192.168.137.1/Engineering/";
+    public static ArrayList<String> feedback_image_path = new ArrayList<>();
+    public static ArrayList<Integer> feedback_lect_id = new ArrayList<>();
+    private String frag_hold;
+    static String base = "http://192.168.1.3/Engineering/";
 
     @Override
     public String toString() {
@@ -33,6 +37,14 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public String getFrag_hold() {
+        return frag_hold;
+    }
+
+    public void setFrag_hold(String frag_hold) {
+        this.frag_hold = frag_hold;
     }
 
     public static String getFeedback_content() {
