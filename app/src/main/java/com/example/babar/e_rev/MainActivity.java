@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
         //default nav
         if (userDetails.getFrag_hold() == null) {
-            Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "test", Toast.LENGTH_SHORT).show();
             fragmentManager = getFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)

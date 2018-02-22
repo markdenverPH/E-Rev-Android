@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="MESSAGE HERE"
+        android:text="No data"
         android:textSize="18sp" />
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -22,7 +22,8 @@
         <ListView
             android:id="@+id/fb_lv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

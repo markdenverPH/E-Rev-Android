@@ -67,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //FOR TEMPORARY USE | FASTER TESTING
-        user_hold = "nobaluyut";
-        pass_hold = "nobaluyut";
+        user_hold = "riza";
+        pass_hold = "riza";
         new fetch_login().execute();
     }
 
@@ -165,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                 userDetails.setFull_name(jsonObject.getString("full_name"));
                 userDetails.setOffering_id(jsonObject.getInt("offering_id"));
                 userDetails.setImage_path(jsonObject.getString("image_path"));
+                userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
             } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                 userDetails.setFic_id(jsonObject.getInt("fic_id"));
                 userDetails.setFull_name(jsonObject.getString("full_name"));

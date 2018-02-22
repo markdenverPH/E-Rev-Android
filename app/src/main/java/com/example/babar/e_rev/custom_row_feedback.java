@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +66,7 @@ public class custom_row_feedback extends BaseAdapter {
         tv_offering_name.setText(offering_name.get(position));
         tv_full_name.setText(full_name.get(position));
         tv_subject_name.setText(" — " + subject_name.get(position));
-
+        
         return rowView;
     }
 

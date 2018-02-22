@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class UserDetails {
     public static int student_id, offering_id, ad_item, fic_id, fic_status;
-    public static String full_name, username, password, email, department, image_path, identifier, feedback_content;
+    public static String full_name, username, password, email, department, image_path, identifier, feedback_content, enrollment;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
     public static ArrayList<String> announcement_created_at = new ArrayList<>();
@@ -22,7 +22,7 @@ public class UserDetails {
     public static ArrayList<String> feedback_image_path = new ArrayList<>();
     public static ArrayList<Integer> feedback_lect_id = new ArrayList<>();
     private String frag_hold;
-    static String base = "http://192.168.1.3/Engineering/";
+    static String base = "http://192.168.1.7/Engineering/";
 
     @Override
     public String toString() {
@@ -37,6 +37,14 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public static String getEnrollment() {
+        return enrollment;
+    }
+
+    public static void setEnrollment(String enrollment) {
+        UserDetails.enrollment = enrollment;
     }
 
     public String getFrag_hold() {

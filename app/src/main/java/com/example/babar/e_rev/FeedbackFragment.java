@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,17 +51,22 @@ public class FeedbackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        // LASt - create feedback viewing for prof/fic
         View view = inflater.inflate(R.layout.fragment_feedback, container, false);
         userDetails = new UserDetails();
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fb_swipe);
         lv = (ListView) view.findViewById(R.id.fb_lv);
         tv_message = (TextView) view.findViewById(R.id.feedback_message);
         base = userDetails.getBase();
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new feedback().execute();
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    new feedback_lect().execute();
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    new feedback_viewing().execute();
+                }
             }
         });
 
@@ -71,17 +78,31 @@ public class FeedbackFragment extends Fragment {
                 } else {
                     Intent intent = new Intent(getActivity(), FeedbackSend.class);
                     userDetails.setAd_item(position);
-                    getActivity().startActivity(intent);
+                    startActivity(intent);
                 }
             }
         });
 
-
-        new feedback().execute();
+        if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+            new feedback_lect().execute();
+        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+            new feedback_viewing().execute();
+        }
         return view;
     }
 
-    class feedback extends AsyncTask<Void, Void, String> {
+    @Override
+    public void onStart() {
+        Log.d("feedback_onStart", "feedback_onStart");
+        if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+            new feedback_lect().execute();
+        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+            new feedback_viewing().execute();
+        }
+        super.onStart();
+    }
+
+    class feedback_lect extends AsyncTask<Void, Void, String> {
 
         @Override
         protected void onPreExecute() {
