@@ -29,6 +29,8 @@ public class custom_row_feedback extends BaseAdapter {
     TextView tv_offering_name, tv_subject_name, tv_full_name;
     ImageView tv_image_path;
     LinearLayout holder;
+    UserDetails userDetails = new UserDetails();
+    String ident = userDetails.getIdentifier();
     private static LayoutInflater inflater = null;
 
     public custom_row_feedback(@NonNull Context context, ArrayList<String> subject_name, ArrayList<String> image_path,
@@ -49,24 +51,27 @@ public class custom_row_feedback extends BaseAdapter {
         final View rowView;
         rowView = inflater.inflate(R.layout.custom_row_feedback, null);
         tv_image_path = (ImageView) rowView.findViewById(R.id.lect_profile);
-        tv_offering_name = (TextView) rowView.findViewById(R.id.fb_offering);
         tv_subject_name = (TextView) rowView.findViewById(R.id.fb_subj);
         tv_full_name = (TextView) rowView.findViewById(R.id.fb_name);
         holder = (LinearLayout) rowView.findViewById(R.id.ll_holder);
+        tv_offering_name = (TextView) rowView.findViewById(R.id.fb_offering);
 
-        if (feedback_done.get(position) == 1) {
+        if (ident.equalsIgnoreCase("student")) {
+            tv_offering_name.setText(offering_name.get(position));
+        } else if (ident.equalsIgnoreCase("faculty in charge")) {
+            tv_offering_name.setVisibility(View.GONE);
+        }
+        if (!feedback_done.isEmpty() && feedback_done.get(position) == 1) {
             holder.setBackgroundColor(Color.parseColor("#adad9c"));
         }
-
-        UserDetails userDetails = new UserDetails();
 
         Picasso.with(rowView.getContext())
                 .load(userDetails.getBase() + userDetails.feedback_image_path.get(position))
                 .into(tv_image_path);
-        tv_offering_name.setText(offering_name.get(position));
+
         tv_full_name.setText(full_name.get(position));
         tv_subject_name.setText(" — " + subject_name.get(position));
-        
+
         return rowView;
     }
 

@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 
 public class UserDetails {
-    public static int student_id, offering_id, ad_item, fic_id, fic_status;
-    public static String full_name, username, password, email, department, image_path, identifier, feedback_content, enrollment;
+    public static int student_id, offering_id, ad_item, fic_id, fic_status, fbv_interval = 1, fbv_sort;
+    public static String full_name, username, password, email, department, image_path, identifier, feedback_content, enrollment, firstname, midname, lastname;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
     public static ArrayList<String> announcement_created_at = new ArrayList<>();
@@ -21,6 +21,8 @@ public class UserDetails {
     public static ArrayList<Integer> feedback_done = new ArrayList<>();
     public static ArrayList<String> feedback_image_path = new ArrayList<>();
     public static ArrayList<Integer> feedback_lect_id = new ArrayList<>();
+    public static ArrayList<String> fbv_content = new ArrayList<>();
+    public static ArrayList<String> fbv_date = new ArrayList<>();
     private String frag_hold;
     static String base = "http://192.168.1.7/Engineering/";
 
@@ -37,6 +39,46 @@ public class UserDetails {
                 ", image_path='" + image_path + '\'' +
                 ", identifier='" + identifier + '\'' +
                 '}';
+    }
+
+    public static int getFbv_interval() {
+        return fbv_interval;
+    }
+
+    public static void setFbv_interval(int fbv_interval) {
+        UserDetails.fbv_interval = fbv_interval;
+    }
+
+    public static int getFbv_sort() {
+        return fbv_sort;
+    }
+
+    public static void setFbv_sort(int fbv_sort) {
+        UserDetails.fbv_sort = fbv_sort;
+    }
+
+    public static String getFirstname() {
+        return firstname;
+    }
+
+    public static void setFirstname(String firstname) {
+        UserDetails.firstname = firstname;
+    }
+
+    public static String getMidname() {
+        return midname;
+    }
+
+    public static void setMidname(String midname) {
+        UserDetails.midname = midname;
+    }
+
+    public static String getLastname() {
+        return lastname;
+    }
+
+    public static void setLastname(String lastname) {
+        UserDetails.lastname = lastname;
     }
 
     public static String getEnrollment() {

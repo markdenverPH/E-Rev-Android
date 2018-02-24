@@ -62,43 +62,36 @@ public class FeedbackFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
-                    new feedback_lect().execute();
-                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
-                    new feedback_viewing().execute();
-                }
+                new feedback_lect().execute();
             }
         });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (userDetails.feedback_done.get(position) == 1) {         //means feedback is done
-                    Toast.makeText(getActivity(), "Feedback already submitted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(getActivity(), FeedbackSend.class);
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    if (userDetails.feedback_done.get(position) == 1) {         //means feedback is done
+                        Toast.makeText(getActivity(), "Feedback already submitted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(getActivity(), FeedbackSend.class);
+                        userDetails.setAd_item(position);
+                        startActivity(intent);
+                    }
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    Intent intent = new Intent(getActivity(), FeedbackView.class);
                     userDetails.setAd_item(position);
                     startActivity(intent);
                 }
             }
         });
 
-        if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
-            new feedback_lect().execute();
-        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
-            new feedback_viewing().execute();
-        }
         return view;
     }
 
     @Override
     public void onStart() {
         Log.d("feedback_onStart", "feedback_onStart");
-        if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
-            new feedback_lect().execute();
-        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
-            new feedback_viewing().execute();
-        }
+        new feedback_lect().execute();
         super.onStart();
     }
 
@@ -112,7 +105,6 @@ public class FeedbackFragment extends Fragment {
 
         @Override
         protected String doInBackground(Void... params) {
-
             try {
                 URL url = new URL(base + "mobile/feedback/");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -124,15 +116,17 @@ public class FeedbackFragment extends Fragment {
 
                 ContentValues cv = new ContentValues();
 
-                cv.put("offering_id", userDetails.getOffering_id());
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    cv.put("offering_id", userDetails.getOffering_id());
+                    cv.put("id", userDetails.getStudent_id());
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    cv.put("id", userDetails.getFic_id());
+                }
                 cv.put("identifier", userDetails.getIdentifier());
-                cv.put("student_id", userDetails.getStudent_id());
                 cv.put("department", userDetails.getDepartment());
-                String[] separated = userDetails.getFull_name().split(" ");
-                int size = separated.length;
-                cv.put("firstname", separated[0]);
-                cv.put("midname", separated[size - 2]);
-                cv.put("lastname", separated[size - 1]);
+                cv.put("firstname", userDetails.getFirstname());
+                cv.put("midname", userDetails.getMidname());
+                cv.put("lastname", userDetails.getLastname());
                 bw.write(createPostString(cv));
                 bw.flush();
                 bw.close();
@@ -159,12 +153,12 @@ public class FeedbackFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String strJSON) {
-            parseJSON(strJSON);
+            parseJSON_lect(strJSON);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    public void parseJSON(String strJSON) {     //LAST - receiving of data on to be placed on listview
+    public void parseJSON_lect(String strJSON) {
         Log.d("fb_strJSON", strJSON);
         try {
             jsonObject = new JSONObject(strJSON);
@@ -181,21 +175,32 @@ public class FeedbackFragment extends Fragment {
                 lv.setVisibility(View.GONE);
                 tv_message.setVisibility(View.VISIBLE);
                 jsonArray = jsonObject.getJSONArray("message");
-                userDetails.feedback_content = jsonObject.getString("message_content");
+                userDetails.feedback_content = jsonObject.getString("message");
                 tv_message.setText(userDetails.getFeedback_content());
-            } else {
+            } else if (jsonObject.has("result")) {
                 lv.setVisibility(View.VISIBLE);
                 tv_message.setVisibility(View.GONE);
                 jsonArray = jsonObject.getJSONArray("result");
-                while (jsonArray.length() > i) {
-                    jsonObject = jsonArray.getJSONObject(i);
-                    userDetails.feedback_done.add(jsonObject.getInt("feedback_done"));
-                    userDetails.feedback_offering_name.add(jsonObject.getString("offering_name"));
-                    userDetails.feedback_full_name.add(jsonObject.getString("full_name"));
-                    userDetails.feedback_image_path.add(jsonObject.getString("image_path"));
-                    userDetails.feedback_lect_id.add(jsonObject.getInt("lecturer_id"));
-                    userDetails.feedback_subject_name.add(jsonObject.getString("subject_name"));
-                    i++;
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    while (jsonArray.length() > i) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        userDetails.feedback_done.add(jsonObject.getInt("feedback_done"));
+                        userDetails.feedback_offering_name.add(jsonObject.getString("offering_name"));
+                        userDetails.feedback_full_name.add(jsonObject.getString("full_name"));
+                        userDetails.feedback_image_path.add(jsonObject.getString("image_path"));
+                        userDetails.feedback_lect_id.add(jsonObject.getInt("lecturer_id"));
+                        userDetails.feedback_subject_name.add(jsonObject.getString("subject_name"));
+                        i++;
+                    }
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    while (jsonArray.length() > i) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        userDetails.feedback_full_name.add(jsonObject.getString("full_name"));
+                        userDetails.feedback_image_path.add(jsonObject.getString("image_path"));
+                        userDetails.feedback_lect_id.add(jsonObject.getInt("lecturer_id"));
+                        userDetails.feedback_subject_name.add(jsonObject.getString("lecturer_expertise"));
+                        i++;
+                    }
                 }
             }
 

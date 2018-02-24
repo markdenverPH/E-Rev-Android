@@ -195,6 +195,7 @@ public class FeedbackSend extends AppCompatActivity {
 
                 cv.put("lect_id", userDetails.getAd_item() + 1);
                 cv.put("stud_id", userDetails.getStudent_id());
+                cv.put("identifier", userDetails.getIdentifier());
                 cv.put("department", userDetails.getDepartment());
                 cv.put("enrollment_id", userDetails.getEnrollment());
                 cv.put("offering_id", userDetails.getOffering_id());

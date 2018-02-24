@@ -40,7 +40,12 @@
         <activity
             android:name=".FeedbackSend"
             android:label="Feedback"
-            android:theme="@style/AppTheme2"></activity>
+            android:theme="@style/AppTheme2" />
+        <activity
+            android:name=".FeedbackView"
+            android:label="Feedback Viewing"
+            android:theme="@style/AppTheme2" />
+        <activity android:name=".custom_row_fbv"></activity>
     </application>
 
 </manifest>

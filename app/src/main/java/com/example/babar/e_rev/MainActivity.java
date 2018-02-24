@@ -75,7 +75,11 @@ public class MainActivity extends AppCompatActivity
         nav_user_role = (TextView) v.findViewById(R.id.nav_user_role);
         nav_profile = (ImageView) v.findViewById(R.id.nav_profile);
         userDetails = new UserDetails();
-        nav_full_name.setText(userDetails.getFull_name());
+        //capitalize
+        String firstname = userDetails.getFirstname().substring(0, 1).toUpperCase() + userDetails.getFirstname().substring(1) + " ";
+        String lastname = userDetails.getLastname().substring(0, 1).toUpperCase() + userDetails.getLastname().substring(1);
+        String midname = userDetails.getMidname().substring(0, 1).toUpperCase() + ". ";
+        nav_full_name.setText(firstname + midname + lastname);
         nav_user_role.setText(userDetails.getStudent_id() + " — " + userDetails.getIdentifier() + " — " + userDetails.getDepartment());
         Picasso.with(v.getContext())
                 .load(userDetails.getBase() + userDetails.getImage_path())

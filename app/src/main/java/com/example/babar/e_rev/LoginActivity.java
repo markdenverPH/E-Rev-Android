@@ -63,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
 //        }
 //        base = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
-        base = userDetails.getBase();
 
+        base = userDetails.getBase();
 
         //FOR TEMPORARY USE | FASTER TESTING
         user_hold = "riza";
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             if (strJSON.isEmpty()) {
                 dialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (!strJSON.isEmpty()) {
                 parseJSON(strJSON);
                 dialog.dismiss();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void parseJSON(String strJSON) {
+        Log.d("userdetails", strJSON);
         try {
             jsonObject = new JSONObject(strJSON);
             jsonArray = jsonObject.getJSONArray("result");
@@ -166,6 +167,9 @@ public class LoginActivity extends AppCompatActivity {
                 userDetails.setOffering_id(jsonObject.getInt("offering_id"));
                 userDetails.setImage_path(jsonObject.getString("image_path"));
                 userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
+                userDetails.setFirstname(jsonObject.getString("firstname"));
+                userDetails.setMidname(jsonObject.getString("midname"));
+                userDetails.setLastname(jsonObject.getString("lastname"));
             } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                 userDetails.setFic_id(jsonObject.getInt("fic_id"));
                 userDetails.setFull_name(jsonObject.getString("full_name"));
@@ -173,8 +177,11 @@ public class LoginActivity extends AppCompatActivity {
                 userDetails.setImage_path(jsonObject.getString("image_path"));
                 userDetails.setDepartment(jsonObject.getString("fic_department"));
                 userDetails.setFic_status(jsonObject.getInt("fic_status"));
+                userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
+                userDetails.setFirstname(jsonObject.getString("firstname"));
+                userDetails.setMidname(jsonObject.getString("midname"));
+                userDetails.setLastname(jsonObject.getString("lastname"));
             }
-            Log.d("userdetails", userDetails.toString());
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
         }
