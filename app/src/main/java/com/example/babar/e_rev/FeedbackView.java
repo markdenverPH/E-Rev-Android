@@ -1,5 +1,7 @@
 package com.example.babar.e_rev;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -48,13 +51,17 @@ public class FeedbackView extends AppCompatActivity {
     String sort_hold;
     TextView fbv_message;
     BaseAdapter mAdapter;
+    Boolean initial;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_view);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userDetails = new UserDetails();
+        base = userDetails.getBase();
         getSupportActionBar().setSubtitle("Lecturer: " + userDetails.feedback_full_name.get(userDetails.getAd_item()));
         interval = (Spinner) findViewById(R.id.fbv_interval);
         sort = (Spinner) findViewById(R.id.fbv_sort);
@@ -71,18 +78,24 @@ public class FeedbackView extends AppCompatActivity {
         textView.setTextSize(15);
         textView.setPadding(0, 16, 0, 16);
         lv.addFooterView(textView);
+        initial = null;
 
         /***INTERVAL***/
         interval.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             //ignores same picked item
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                userDetails.fbv_interval = position;
-                interval_hold = (Integer) interval.getSelectedItem();
+                userDetails.fbv_interval = position;    //saved the index
+                interval_hold = Integer.valueOf(interval.getSelectedItem().toString()); //value
 //                Toast.makeText(getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
                 // execute asynctask
-                high = (Integer) interval.getSelectedItem();
+                high = interval_hold;
                 low = 0;
+                Log.d("fbv_interval", "interval: high=" + high + " low=" + low);
+                if (initial == null) {
+                    initial = false;
+                }
                 new feedback_view().execute();
             }
 
@@ -97,6 +110,7 @@ public class FeedbackView extends AppCompatActivity {
             //ignores same picked item
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Log.d("fbv_sort", "sort");
                 userDetails.fbv_sort = position;
                 switch (position) {
                     case 0:
@@ -106,10 +120,15 @@ public class FeedbackView extends AppCompatActivity {
                         sort_hold = "DESC";
                         break;
                 }
+                if (initial) {
+                    high = Integer.valueOf(interval.getSelectedItem().toString());
+                    low = 0;
 //                Toast.makeText(getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
-                // execute asynctask
+                    // execute asynctask
 
-                new feedback_view().execute();
+                    new feedback_view().execute();
+                }
+                initial = true;
             }
 
             @Override
@@ -121,16 +140,62 @@ public class FeedbackView extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                high = +(Integer) interval.getSelectedItem();
-                low = +(Integer) interval.getSelectedItem();
+                low = low + high;
+                Log.d("fbv_loadmore", "loadmore: high=" + high + " low=" + low);
                 new feedback_view().execute();
             }
         });
 
-        BaseAdapter mAdapter;
-        mAdapter = new custom_row_announcement(getApplicationContext(), userDetails.announcement_title, userDetails.announcement_content,
-                userDetails.announcement_created_at, userDetails.announcement_announcer);
-        lv.setAdapter(mAdapter);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.d("fbv_swipe", "swipe");
+                low = 0;
+                high = Integer.valueOf(interval.getSelectedItem().toString());
+                userDetails.fbv_interval = interval.getSelectedItemPosition();
+                userDetails.fbv_sort = sort.getSelectedItemPosition();
+                switch (userDetails.fbv_sort) {
+                    case 0:
+                        sort_hold = "ASC";
+                        break;
+                    case 1:
+                        sort_hold = "DESC";
+                        break;
+                }
+
+                new feedback_view().execute();
+            }
+        });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                AlertDialog.Builder fbv_dialog = new AlertDialog.Builder(FeedbackView.this);
+                View v = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+
+                TextView content = (TextView) v.findViewById(R.id.fbv_dialog_content);
+                TextView fbv_dialog_date = (TextView) v.findViewById(R.id.fbv_dialog_date);
+                Button close = (Button) v.findViewById(R.id.fbv_dialog_close);
+
+                content.setText("— " + userDetails.fbv_content.get(position));
+                String hold = userDetails.fbv_date.get(position);
+                hold.replaceAll("\\n", " ");
+                fbv_dialog_date.setText("— " + hold);
+
+                fbv_dialog.setView(v);
+                final AlertDialog dialog = fbv_dialog.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
 
     }
 
@@ -155,12 +220,13 @@ public class FeedbackView extends AppCompatActivity {
 
                 ContentValues cv = new ContentValues();
 
+                Log.d("fbv_sentPOST", userDetails.getIdentifier() + " " + (userDetails.getAd_item() + 1) + " " + low + " " + high + " " + sort_hold + " " + userDetails.getDepartment());
                 cv.put("identifier", userDetails.getIdentifier());
-                cv.put("lect_id", userDetails.getAd_item());
+                cv.put("lect_id", userDetails.getAd_item() + 1);
                 cv.put("lower_limit", low);
                 cv.put("higher_limit", high);
-                cv.put("enrollment_id", userDetails.getEnrollment());
                 cv.put("sort", sort_hold);
+                cv.put("department", userDetails.getDepartment());
                 bw.write(createPostString(cv));
                 bw.flush();
                 bw.close();
@@ -180,7 +246,7 @@ public class FeedbackView extends AppCompatActivity {
                 con.disconnect();
                 return sb.toString();
             } catch (Exception e) {     //error logs
-                Log.d("feedbackerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Log.d("fbverror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }
             return "";
         }
@@ -193,7 +259,7 @@ public class FeedbackView extends AppCompatActivity {
     }
 
     public void parseJSON_lect(String strJSON) {
-        Log.d("fb_strJSON", strJSON);
+        Log.d("fbv_strJSON", strJSON);
         try {
             jsonObject = new JSONObject(strJSON);
             int i = 0;
@@ -204,11 +270,14 @@ public class FeedbackView extends AppCompatActivity {
             }
 
             if (jsonObject.has("message")) {
-                lv.setVisibility(View.GONE);
-                fbv_message.setVisibility(View.VISIBLE);
-                jsonArray = jsonObject.getJSONArray("message");
-                userDetails.feedback_content = jsonObject.getString("message");
-                fbv_message.setText(userDetails.getFeedback_content());
+                if (low == 0) {
+                    lv.setVisibility(View.GONE);
+                    fbv_message.setVisibility(View.VISIBLE);
+                    jsonArray = jsonObject.getJSONArray("message");
+                    jsonObject = jsonArray.getJSONObject(i);
+                    userDetails.feedback_content = jsonObject.getString("message");
+                    fbv_message.setText(userDetails.getFeedback_content());
+                }
             } else if (jsonObject.has("result")) {
                 lv.setVisibility(View.VISIBLE);
                 fbv_message.setVisibility(View.GONE);
@@ -216,21 +285,25 @@ public class FeedbackView extends AppCompatActivity {
 
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
-                    userDetails.feedback_full_name.add(jsonObject.getString("full_name"));
-                    userDetails.feedback_image_path.add(jsonObject.getString("image_path"));
+                    userDetails.fbv_date.add(jsonObject.getString("lecturer_feedback_timedate"));
+                    userDetails.fbv_content.add(jsonObject.getString("lecturer_feedback_comment"));
                     i++;
                 }
-            }
+                mAdapter = new custom_row_fbv(getApplicationContext(), userDetails.fbv_content, userDetails.fbv_date);
+                lv.setAdapter(mAdapter);
 
-// LAST - setting up the web. adapter is ready. need to design custom_row
-            mAdapter = new custom_row_fbv(getApplicationContext(), userDetails.fbv_content, userDetails.fbv_date);
-            lv.setAdapter(mAdapter);
-
-            if (low != 0) {
-                lv.invalidateViews();
+                if (low != 0) {
+                    lv.invalidateViews();
+                }
             }
+            int lv_count = lv.getAdapter().getCount();
+            if ((lv_count - 1) != (low + high)) {
+                low = lv_count - 2;
+                Log.d("fbv_lv_count", "low: " + low);
+            }
+            lv.smoothScrollToPosition(low);
         } catch (Exception e) {
-            Log.i("feedback_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Log.i("fbv_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }
     }
 
@@ -251,4 +324,18 @@ public class FeedbackView extends AppCompatActivity {
         }
         return sb.toString();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:         //when user pressed back, possible to execute func here
+//                Toast.makeText(getApplicationContext(), "TEST BACK", Toast.LENGTH_LONG).show();
+//                NavUtils.navigateUpFromSameTask(this);    //default
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

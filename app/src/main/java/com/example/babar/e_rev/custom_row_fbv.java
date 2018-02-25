@@ -22,11 +22,7 @@ public class custom_row_fbv extends BaseAdapter {
     ArrayList<String> content = new ArrayList<>();
     ArrayList<String> date = new ArrayList<>();
 
-    TextView tv_offering_name, tv_subject_name, tv_full_name;
-    ImageView tv_image_path;
-    LinearLayout holder;
-    UserDetails userDetails = new UserDetails();
-    String ident = userDetails.getIdentifier();
+    TextView tv_content, tv_date;
     private static LayoutInflater inflater = null;
 
     public custom_row_fbv(@NonNull Context context, ArrayList<String> content, ArrayList<String> date) {
@@ -40,9 +36,11 @@ public class custom_row_fbv extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final View rowView;
         rowView = inflater.inflate(R.layout.activity_custom_row_fbv, null);
-        tv_image_path = (ImageView) rowView.findViewById(R.id.lect_profile);
-        tv_subject_name = (TextView) rowView.findViewById(R.id.fb_subj);
+        tv_content = (TextView) rowView.findViewById(R.id.fbv_content);
+        tv_date = (TextView) rowView.findViewById(R.id.fbv_date);
 
+        tv_content.setText("— " + content.get(position));
+        tv_date.setText(date.get(position));
 
         return rowView;
     }
