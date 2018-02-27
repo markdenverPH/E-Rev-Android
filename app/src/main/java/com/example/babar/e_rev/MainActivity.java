@@ -61,13 +61,15 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_courseware).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_grade).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_attendance).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
             navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
-            navigationView.getMenu().findItem(R.id.nav_schedule).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_schedule).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_courseware).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
-            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_attendance).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
         View v = navigationView.getHeaderView(0);
@@ -165,6 +167,12 @@ public class MainActivity extends AppCompatActivity
                 this.setTitle("Schedule");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_feedback) {
+                userDetails.setFrag_hold("Feedback");
+                fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                        .replace(R.id.fragment_hold, feedbackFragment);
+                this.setTitle("Feedback");
+                fragmentTransaction.addToBackStack(null);
+            } else if (id == R.id.nav_attendance) {                     /*********NEED TO SETUP*********/
                 userDetails.setFrag_hold("Feedback");
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, feedbackFragment);

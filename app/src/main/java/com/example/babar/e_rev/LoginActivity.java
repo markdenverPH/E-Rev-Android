@@ -67,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         base = userDetails.getBase();
 
         //FOR TEMPORARY USE | FASTER TESTING
-        user_hold = "riza";
-        pass_hold = "riza";
-        new fetch_login().execute();
+//        user_hold = "riza";
+//        pass_hold = "riza";
+//        new fetch_login().execute();
     }
 
     public void login(View v) {

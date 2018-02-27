@@ -22,6 +22,10 @@
             android:id="@+id/nav_feedback"
             android:icon="@drawable/ic_comment_black_24dp"
             android:title="Feedback" />
+        <item
+            android:id="@+id/nav_attendance"
+            android:icon="@drawable/ic_attendanceblack_24dp"
+            android:title="Attendance" />
     </group>
     <group>
         <item

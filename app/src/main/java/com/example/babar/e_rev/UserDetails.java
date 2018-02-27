@@ -24,7 +24,7 @@ public class UserDetails {
     public static ArrayList<String> fbv_content = new ArrayList<>();
     public static ArrayList<String> fbv_date = new ArrayList<>();
     private String frag_hold;
-    static String base = "http://192.168.1.7/Engineering/";
+    static String base = "http://192.168.42.232/Engineering/";
 
     @Override
     public String toString() {
