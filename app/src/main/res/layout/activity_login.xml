@@ -24,15 +24,6 @@
                 android:layout_weight="0.84"
                 android:background="?attr/off_green">
 
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.84"
-                    android:alpha="0.35"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/erev_800x800" />
-
                 <LinearLayout
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"

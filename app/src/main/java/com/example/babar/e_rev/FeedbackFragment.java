@@ -106,7 +106,7 @@ public class FeedbackFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(base + "mobile/feedback/");
+                URL url = new URL(base + "Mobile/feedback/");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -175,6 +175,7 @@ public class FeedbackFragment extends Fragment {
                 lv.setVisibility(View.GONE);
                 tv_message.setVisibility(View.VISIBLE);
                 jsonArray = jsonObject.getJSONArray("message");
+                jsonObject = jsonArray.getJSONObject(i);
                 userDetails.feedback_content = jsonObject.getString("message");
                 tv_message.setText(userDetails.getFeedback_content());
             } else if (jsonObject.has("result")) {

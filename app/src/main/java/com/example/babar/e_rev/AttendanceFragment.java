@@ -1,23 +1,17 @@
 package com.example.babar.e_rev;
 
-
-import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+public class AttendanceFragment extends Fragment {
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ScheduleFragment extends Fragment {
-
-
-    public ScheduleFragment() {
+    public AttendanceFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

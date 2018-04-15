@@ -25,6 +25,9 @@ public class custom_row_fbv extends BaseAdapter {
     TextView tv_content, tv_date;
     private static LayoutInflater inflater = null;
 
+    public custom_row_fbv() {
+    }
+
     public custom_row_fbv(@NonNull Context context, ArrayList<String> content, ArrayList<String> date) {
         this.content = content;
         this.date = date;

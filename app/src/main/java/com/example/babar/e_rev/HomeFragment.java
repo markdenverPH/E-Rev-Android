@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(base + "mobile/announcement");
+                URL url = new URL(base + "Mobile/announcement");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -177,7 +177,7 @@ public class HomeFragment extends Fragment {
                         userDetails.announcement_created_at, userDetails.announcement_announcer);
                 lv.setAdapter(mAdapter);
             }
-            
+
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }

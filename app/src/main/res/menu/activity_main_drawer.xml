@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_grade_black_24dp"
             android:title="Grade Assessment" />
         <item
-            android:id="@+id/nav_courseware"
+            android:id="@+id/nav_course_modules"
             android:icon="@drawable/ic_courseware_black_24dp"
-            android:title="Courseware" />
+            android:title="Course Modules" />
         <item
             android:id="@+id/nav_schedule"
             android:icon="@drawable/ic_schedule_black_24dp"

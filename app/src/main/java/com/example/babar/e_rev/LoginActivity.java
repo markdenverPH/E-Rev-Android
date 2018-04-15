@@ -4,40 +4,34 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,29 +41,28 @@ public class LoginActivity extends AppCompatActivity {
     JSONObject jsonObject;
     UserDetails userDetails;
     String base, user_hold, pass_hold;
+    SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.pass);
         userDetails = new UserDetails();
 
-//        WifiManager wifi = (WifiManager) getApplicationContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        if (wifi.isWifiEnabled()) {
-//            Toast.makeText(getApplicationContext(), "Wifi is ENABLED", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(getApplicationContext(), "Wifi is DISABLED", Toast.LENGTH_SHORT).show();
-//        }
-//        base = intToIp(Integer.valueOf(getWifiApIpAddress(this)));
+        sp = getSharedPreferences("IDValue", 0);
+        if (sp.getBoolean("logged_in", false)) {
+            getUserDetails();
+        } else {
+            username = (EditText) findViewById(R.id.username);
+            password = (EditText) findViewById(R.id.pass);
 
-        base = userDetails.getBase();
+            base = userDetails.getBase();
 
-        //FOR TEMPORARY USE | FASTER TESTING
+            //FOR TEMPORARY USE | FASTER TESTING
 //        user_hold = "riza";
 //        pass_hold = "riza";
-//        new fetch_login().execute();
+//        new fetch_login().execute();}
+        }
     }
 
     public void login(View v) {
@@ -98,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(base + "mobile/login");
+                URL url = new URL(base + "Mobile/login");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -159,29 +152,24 @@ public class LoginActivity extends AppCompatActivity {
 
 //            Toast.makeText(getApplicationContext(), jsonObject.getString("identifier"), Toast.LENGTH_LONG).show();
             userDetails.setIdentifier(jsonObject.getString("identifier"));
+            userDetails.setEmail(jsonObject.getString("email"));
+            userDetails.setFull_name(jsonObject.getString("full_name"));
+            userDetails.setImage_path(jsonObject.getString("image_path"));
+            userDetails.setFirstname(jsonObject.getString("firstname"));
+            userDetails.setMidname(jsonObject.getString("midname"));
+            userDetails.setLastname(jsonObject.getString("lastname"));
+            userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
             if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
                 userDetails.setStudent_id(jsonObject.getInt("student_id"));
-                userDetails.setEmail(jsonObject.getString("email"));
                 userDetails.setDepartment(jsonObject.getString("student_department"));
-                userDetails.setFull_name(jsonObject.getString("full_name"));
                 userDetails.setOffering_id(jsonObject.getInt("offering_id"));
-                userDetails.setImage_path(jsonObject.getString("image_path"));
-                userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
-                userDetails.setFirstname(jsonObject.getString("firstname"));
-                userDetails.setMidname(jsonObject.getString("midname"));
-                userDetails.setLastname(jsonObject.getString("lastname"));
+                userDetails.setStudent_num(jsonObject.getInt("student_num"));
             } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                 userDetails.setFic_id(jsonObject.getInt("fic_id"));
-                userDetails.setFull_name(jsonObject.getString("full_name"));
-                userDetails.setEmail(jsonObject.getString("email"));
-                userDetails.setImage_path(jsonObject.getString("image_path"));
-                userDetails.setDepartment(jsonObject.getString("fic_department"));
                 userDetails.setFic_status(jsonObject.getInt("fic_status"));
-                userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
-                userDetails.setFirstname(jsonObject.getString("firstname"));
-                userDetails.setMidname(jsonObject.getString("midname"));
-                userDetails.setLastname(jsonObject.getString("lastname"));
+                userDetails.setDepartment(jsonObject.getString("fic_department"));
             }
+            saveUserDetails();
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
         }
@@ -205,17 +193,90 @@ public class LoginActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    public String getWifiApIpAddress(Context context) {
-        WifiManager wifii = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        String d = "";
-        d = String.valueOf(wifii.getDhcpInfo().gateway);
-        return d;
+    public void saveUserDetails() {
+        String fileContents;
+        /* "%^&" is the hatian hahaha*/
+        fileContents = userDetails.getIdentifier() +
+                "%^&" + userDetails.getEmail() +
+                "%^&" + userDetails.getFull_name() +
+                "%^&" + userDetails.getImage_path() +
+                "%^&" + userDetails.getFirstname() +
+                "%^&" + userDetails.getMidname() +
+                "%^&" + userDetails.getLastname() +
+                "%^&" + userDetails.getDepartment() +
+                "%^&" + userDetails.getEnrollment();
+        if (userDetails.getIdentifier().equalsIgnoreCase("Student")) {
+            fileContents = fileContents + "%^&" + userDetails.getStudent_id() +
+                    "%^&" + userDetails.getOffering_id() +
+                    "%^&" + userDetails.getStudent_num();
+        } else if (userDetails.getIdentifier().equalsIgnoreCase("Faculty in Charge")) {
+            fileContents = fileContents + "%^&" + userDetails.getFic_id() +
+                    "%^&" + userDetails.getFic_status();
+        }
+
+        String filename = "userdetails";
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(fileContents.getBytes());
+            outputStream.close();
+
+            SharedPreferences sp = getSharedPreferences("IDValue", 0);
+            SharedPreferences.Editor spedit = sp.edit();
+            spedit.putBoolean("logged_in", true);
+            spedit.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public String intToIp(int addr) {
-        return ((addr & 0xFF) + "." +
-                ((addr >>>= 8) & 0xFF) + "." +
-                ((addr >>>= 8) & 0xFF) + "." +
-                ((addr >>>= 8) & 0xFF));
+    public void getUserDetails() {
+        String filename = "userdetails";
+        try {
+            FileInputStream fin = openFileInput(filename);
+            int c;
+            String temp = "";
+            while ((c = fin.read()) != -1) {
+                temp = temp + Character.toString((char) c);
+            }
+            if(temp.isEmpty()){
+                SharedPreferences sp = getSharedPreferences("IDValue", 0);
+                SharedPreferences.Editor spedit = sp.edit();
+                spedit.putBoolean("logged_in", false);
+                spedit.apply();
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                String[] tem = temp.split(Pattern.quote("%^&"));
+                userDetails.setIdentifier(tem[0]);
+                userDetails.setEmail(tem[1]);
+                userDetails.setFull_name(tem[2]);
+                userDetails.setImage_path(tem[3]);
+                userDetails.setFirstname(tem[4]);
+                userDetails.setMidname(tem[5]);
+                userDetails.setLastname(tem[6]);
+                userDetails.setDepartment(tem[7]);
+                userDetails.setEnrollment(tem[8]);
+                if (tem[0].equalsIgnoreCase("student")) {
+                    userDetails.setStudent_id(Integer.valueOf(tem[9]));
+                    userDetails.setOffering_id(Integer.valueOf(tem[10]));
+                    userDetails.setStudent_num(Integer.valueOf(tem[11]));
+                } else if (tem[0].equalsIgnoreCase("faculty in charge")) {
+                    userDetails.setFic_id(Integer.valueOf(tem[9]));
+                    userDetails.setFic_status(Integer.valueOf(tem[10]));
+                }
+                fin.close();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -33,6 +33,9 @@ public class custom_row_feedback extends BaseAdapter {
     String ident = userDetails.getIdentifier();
     private static LayoutInflater inflater = null;
 
+    public custom_row_feedback() {
+    }
+
     public custom_row_feedback(@NonNull Context context, ArrayList<String> subject_name, ArrayList<String> image_path,
                                ArrayList<String> offering_name, ArrayList<String> full_name, ArrayList<Integer> lect_id,
                                ArrayList<Integer> feedback_done) {

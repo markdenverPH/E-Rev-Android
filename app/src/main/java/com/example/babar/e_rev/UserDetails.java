@@ -1,5 +1,8 @@
 package com.example.babar.e_rev;
 
+import android.content.Context;
+
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +10,7 @@ import java.util.ArrayList;
  */
 
 public class UserDetails {
-    public static int student_id, offering_id, ad_item, fic_id, fic_status, fbv_interval = 1, fbv_sort;
+    public static int student_id, student_num, offering_id, ad_item, fic_id, fic_status, fbv_interval = 1, fbv_sort;
     public static String full_name, username, password, email, department, image_path, identifier, feedback_content, enrollment, firstname, midname, lastname;
     public static ArrayList<String> announcement_title = new ArrayList<>();
     public static ArrayList<String> announcement_content = new ArrayList<>();
@@ -24,7 +27,17 @@ public class UserDetails {
     public static ArrayList<String> fbv_content = new ArrayList<>();
     public static ArrayList<String> fbv_date = new ArrayList<>();
     private String frag_hold;
-    static String base = "http://192.168.42.232/Engineering/";
+    //    static String base = "http://feu-erev.esy.es/";
+    static String base = "http://192.168.1.2/Engineering/";
+
+    public static int getStudent_num() {
+        return student_num;
+    }
+
+    public static void setStudent_num(int student_num) {
+        UserDetails.student_num = student_num;
+    }
+
 
     @Override
     public String toString() {
