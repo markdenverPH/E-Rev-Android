@@ -26,9 +26,18 @@ public class UserDetails {
     public static ArrayList<Integer> feedback_lect_id = new ArrayList<>();
     public static ArrayList<String> fbv_content = new ArrayList<>();
     public static ArrayList<String> fbv_date = new ArrayList<>();
+    public static ArrayList<String> course_module_topics = new ArrayList<>();
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";
-    static String base = "http://192.168.1.2/Engineering/";
+    static String base = "http://172.16.21.115/Engineering/";
+
+    public static ArrayList<String> getCourse_module_topics() {
+        return course_module_topics;
+    }
+
+    public static void setCourse_module_topics(ArrayList<String> course_module_topics) {
+        UserDetails.course_module_topics = course_module_topics;
+    }
 
     public static int getStudent_num() {
         return student_num;

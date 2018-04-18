@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 public class LoginActivity extends AppCompatActivity {
 
     public static EditText username, password;
-    ArrayList user_data;
     JSONArray jsonArray;
     JSONObject jsonObject;
     UserDetails userDetails;
@@ -150,7 +149,6 @@ public class LoginActivity extends AppCompatActivity {
             jsonArray = jsonObject.getJSONArray("result");
             jsonObject = jsonArray.getJSONObject(0);
 
-//            Toast.makeText(getApplicationContext(), jsonObject.getString("identifier"), Toast.LENGTH_LONG).show();
             userDetails.setIdentifier(jsonObject.getString("identifier"));
             userDetails.setEmail(jsonObject.getString("email"));
             userDetails.setFull_name(jsonObject.getString("full_name"));

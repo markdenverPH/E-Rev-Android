@@ -46,7 +46,8 @@
             android:label="Feedback Viewing"
             android:theme="@style/AppTheme2" />
         <activity android:name=".custom_row_fbv" />
-        <activity android:name=".AttendanceFragment"></activity>
+        <activity android:name=".AttendanceFragment" />
+        <activity android:name=".custom_row_course_modules"></activity>
     </application>
 
 </manifest>
