@@ -27,9 +27,10 @@ public class UserDetails {
     public static ArrayList<String> fbv_content = new ArrayList<>();
     public static ArrayList<String> fbv_date = new ArrayList<>();
     public static ArrayList<String> course_module_topics = new ArrayList<>();
+    public static ArrayList<Integer> course_module_topics_id = new ArrayList<>();
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";
-    static String base = "http://172.16.21.115/Engineering/";
+    static String base = "http://192.168.1.2/Engineering/";
 
     public static ArrayList<String> getCourse_module_topics() {
         return course_module_topics;

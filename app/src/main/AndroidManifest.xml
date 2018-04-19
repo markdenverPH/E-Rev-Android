@@ -47,7 +47,16 @@
             android:theme="@style/AppTheme2" />
         <activity android:name=".custom_row_fbv" />
         <activity android:name=".AttendanceFragment" />
-        <activity android:name=".custom_row_course_modules"></activity>
+        <activity android:name=".custom_row_course_modules" />
+        <activity
+            android:name=".CourseModulesDetail"
+            android:label="Course Modules"
+            android:theme="@style/AppTheme2">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.babar.e_rev.MainActivity" />
+        </activity>
+        <activity android:name=".custom_row_cm_detail"></activity>
     </application>
 
 </manifest>

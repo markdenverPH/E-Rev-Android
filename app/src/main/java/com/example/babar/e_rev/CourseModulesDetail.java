@@ -1,17 +1,13 @@
 package com.example.babar.e_rev;
 
-
 import android.content.ContentValues;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,50 +29,40 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
-public class CourseModulesFragment extends Fragment {
+public class CourseModulesDetail extends AppCompatActivity {
+    int item_pos;
     SwipeRefreshLayout swipeRefreshLayout;
     String base;
     public UserDetails userDetails;
     JSONArray jsonArray;
     JSONObject jsonObject;
     ListView lv;
-    View rootView;
-    TextView no_course_modules;
+    TextView no_cm_detail;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_course_modules, container, false);
-        lv = (ListView) rootView.findViewById(R.id.lv_course_modules);
-        no_course_modules = (TextView) rootView.findViewById(R.id.tv_no_course_modules);
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.cm_swiperefresh);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.course_modules_detail);
+        lv = (ListView) findViewById(R.id.lv_cm_detail);
+        no_cm_detail = (TextView) findViewById(R.id.tv_no_cm_detail);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.cm_detail_swiperefresh);
         userDetails = new UserDetails();
-        new course_module_topic().execute();
+        new cm_detail().execute();
         base = userDetails.getBase();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new course_module_topic().execute();
+                new cm_detail().execute();
             }
         });
 
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), CourseModulesDetail.class);
-                userDetails.setAd_item(position);
-                getActivity().startActivity(intent);
-            }
-        });
-        return rootView;
+        UserDetails userDetails = new UserDetails();
+        item_pos = userDetails.getAd_item();
+        getSupportActionBar().setSubtitle(userDetails.course_module_topics.get(item_pos));
     }
 
-    class course_module_topic extends AsyncTask<Void, Void, String> {
+    class cm_detail extends AsyncTask<Void, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -87,7 +73,7 @@ public class CourseModulesFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(base + "Mobile/course_modules");
+                URL url = new URL(base + "Mobile/course_modules_detail");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -102,6 +88,7 @@ public class CourseModulesFragment extends Fragment {
                 cv.put("firstname", userDetails.getFirstname());
                 cv.put("midname", userDetails.getMidname());
                 cv.put("lastname", userDetails.getLastname());
+                cv.put("topic_id", userDetails.course_module_topics_id.get(item_pos));
                 if(userDetails.getIdentifier().equalsIgnoreCase("student")){
                     cv.put("id", userDetails.getStudent_id());
                     cv.put("offering_id", userDetails.getOffering_id());
@@ -127,47 +114,51 @@ public class CourseModulesFragment extends Fragment {
                 con.disconnect();
                 return sb.toString();
             } catch (Exception e) {     //error logs
-                Log.d("course_module_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Log.d("cm_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }
             return "";
         }
 
         @Override
         protected void onPostExecute(String strJSON) {
-            Log.d("course_module_JSON", strJSON);
+            Log.d("cm_detail_JSON", strJSON);
             parseJSON(strJSON);
             swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     public void parseJSON(String strJSON) {
+        ArrayList<String> name = new ArrayList<>();
+        ArrayList<String> path = new ArrayList<>();
+        ArrayList<Integer> id = new ArrayList<>();
         try {
             userDetails.course_module_topics.clear();
 
             if (strJSON == "") { //if empty json
                 lv.setVisibility(View.GONE);
-                no_course_modules.setVisibility(View.VISIBLE);
+                no_cm_detail.setVisibility(View.VISIBLE);
                 lv.setAdapter(null);
             } else {
                 jsonObject = new JSONObject(strJSON);
                 jsonArray = jsonObject.getJSONArray("result");
                 int i = 0;
-
+//LAST!!!
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
-                    userDetails.course_module_topics.add(i, jsonObject.getString("topic_name"));
-                    userDetails.course_module_topics_id.add(i, jsonObject.getInt("topic_id"));
+                    name.add(i, jsonObject.getString("course_modules_name"));
+                    path.add(i, jsonObject.getString("course_modules_path"));
+                    id.add(i, jsonObject.getInt("course_modules_id"));
                     i++;
                 }
-                no_course_modules.setVisibility(View.GONE);
+                no_cm_detail.setVisibility(View.GONE);
                 lv.setVisibility(View.VISIBLE);
                 BaseAdapter mAdapter;
-                mAdapter = new custom_row_course_modules(getActivity(), userDetails.course_module_topics);
+                mAdapter = new custom_row_cm_detail(getApplicationContext(), name, path, id);
                 lv.setAdapter(mAdapter);
             }
 
         } catch (Exception e) {
-            Log.i("course_module_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Log.i("cm_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }
     }
 
@@ -187,5 +178,18 @@ public class CourseModulesFragment extends Fragment {
             sb.append(URLEncoder.encode(v.getValue().toString(), "UTF-8"));
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:         //when user pressed back, possible to execute func here
+//                Toast.makeText(getApplicationContext(), "TEST BACK", Toast.LENGTH_LONG).show();
+//                NavUtils.navigateUpFromSameTask(this);    //default
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
