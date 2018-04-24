@@ -1,16 +1,25 @@
 package com.example.babar.e_rev;
 
+import android.app.DownloadManager;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,11 +47,14 @@ public class CourseModulesDetail extends AppCompatActivity {
     JSONObject jsonObject;
     ListView lv;
     TextView no_cm_detail;
-
+DownloadManager downloadManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.course_modules_detail);
+        userDetails = new UserDetails();
+        item_pos = userDetails.getAd_item();
+        getSupportActionBar().setSubtitle(userDetails.course_module_topics.get(item_pos));
         lv = (ListView) findViewById(R.id.lv_cm_detail);
         no_cm_detail = (TextView) findViewById(R.id.tv_no_cm_detail);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.cm_detail_swiperefresh);
@@ -56,10 +68,20 @@ public class CourseModulesDetail extends AppCompatActivity {
                 new cm_detail().execute();
             }
         });
-
-        UserDetails userDetails = new UserDetails();
-        item_pos = userDetails.getAd_item();
-        getSupportActionBar().setSubtitle(userDetails.course_module_topics.get(item_pos));
+//        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+////            @Override
+////            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+////                                           int pos, long id) {
+////                downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+////                Uri uri = Uri.parse(userDetails.getBase()+"assets/modules/"+userDetails.getCourse_module_topics_path().get(pos));
+////                DownloadManager.Request request = new DownloadManager.Request(uri);
+////                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+////                Long ref = downloadManager.enqueue(request);
+////
+////                return true;
+////            }
+////        });
+        registerForContextMenu(lv);
     }
 
     class cm_detail extends AsyncTask<Void, Void, String> {
@@ -128,12 +150,11 @@ public class CourseModulesDetail extends AppCompatActivity {
     }
 
     public void parseJSON(String strJSON) {
-        ArrayList<String> name = new ArrayList<>();
-        ArrayList<String> path = new ArrayList<>();
-        ArrayList<Integer> id = new ArrayList<>();
+        Log.d("cm_detail_parseJSON", strJSON);
         try {
             userDetails.course_module_topics.clear();
-
+            userDetails.course_module_topics_path.clear();
+            userDetails.course_module_topics_id.clear();
             if (strJSON == "") { //if empty json
                 lv.setVisibility(View.GONE);
                 no_cm_detail.setVisibility(View.VISIBLE);
@@ -145,20 +166,45 @@ public class CourseModulesDetail extends AppCompatActivity {
 //LAST!!!
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
-                    name.add(i, jsonObject.getString("course_modules_name"));
-                    path.add(i, jsonObject.getString("course_modules_path"));
-                    id.add(i, jsonObject.getInt("course_modules_id"));
+                    userDetails.course_module_topics.add(i, jsonObject.getString("course_modules_name"));
+                    userDetails.course_module_topics_path.add(i, jsonObject.getString("course_modules_path"));
+                    userDetails.course_module_topics_id.add(i, jsonObject.getInt("course_modules_id"));
                     i++;
                 }
                 no_cm_detail.setVisibility(View.GONE);
                 lv.setVisibility(View.VISIBLE);
                 BaseAdapter mAdapter;
-                mAdapter = new custom_row_cm_detail(getApplicationContext(), name, path, id);
+                mAdapter = new custom_row_cm_detail(getApplicationContext(), userDetails.course_module_topics,
+                        userDetails.course_module_topics_path, userDetails.course_module_topics_id);
                 lv.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
 
         } catch (Exception e) {
             Log.i("cm_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        getMenuInflater().inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()){
+            case R.id.download:
+                downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri = Uri.parse(userDetails.getBase()+"assets/modules/"+userDetails.getCourse_module_topics_path().get(info.position));
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Long ref = downloadManager.enqueue(request);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 
