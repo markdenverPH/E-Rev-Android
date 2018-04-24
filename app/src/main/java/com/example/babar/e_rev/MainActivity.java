@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity
     int current_menu = R.id.nav_home;
     UserDetails userDetails;
     ImageView nav_profile;
+    //below is the tab layout
+    public static View tabs;
+    public static ViewPager container;
+    public static GradeAssessmentFragment.SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,19 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        tabs = findViewById(R.id.tabs);
+        container = (ViewPager) findViewById(R.id.container);
+        //LAST!! - WORKING ON TABS
+        mSectionsPagerAdapter = new GradeAssessmentFragment.SectionsPagerAdapter(getSupportFragmentManager());
+        container = (ViewPager) findViewById(R.id.container);
+        container.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         userDetails = new UserDetails();
@@ -85,7 +104,12 @@ public class MainActivity extends AppCompatActivity
         String lastname = userDetails.getLastname().substring(0, 1).toUpperCase() + userDetails.getLastname().substring(1);
         String midname = userDetails.getMidname().substring(0, 1).toUpperCase() + ". ";
         nav_full_name.setText(firstname + midname + lastname);
-        nav_user_role.setText(userDetails.getStudent_num() + " — " + userDetails.getIdentifier() + " — " + userDetails.getDepartment());
+        if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+            nav_user_role.setText(userDetails.getStudent_num() + " — " + userDetails.getIdentifier() + " — " + userDetails.getDepartment());
+        } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")){
+            nav_user_role.setText(userDetails.getFic_id() + " — " + userDetails.getIdentifier() + " — " + userDetails.getDepartment());
+        }
+
         Picasso.with(v.getContext())
                 .load(userDetails.getBase() + userDetails.getImage_path())
                 .into(nav_profile);
@@ -120,7 +144,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        tabs.setVisibility(View.GONE);
+        container.setVisibility(View.GONE);
         if (current_menu != id) {
             fragmentTransaction = fragmentManager.beginTransaction();
             getFragmentManager().popBackStack();

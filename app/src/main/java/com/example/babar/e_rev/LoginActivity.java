@@ -156,12 +156,12 @@ public class LoginActivity extends AppCompatActivity {
             userDetails.setFirstname(jsonObject.getString("firstname"));
             userDetails.setMidname(jsonObject.getString("midname"));
             userDetails.setLastname(jsonObject.getString("lastname"));
-            userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
             if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
                 userDetails.setStudent_id(jsonObject.getInt("student_id"));
                 userDetails.setDepartment(jsonObject.getString("student_department"));
                 userDetails.setOffering_id(jsonObject.getInt("offering_id"));
                 userDetails.setStudent_num(jsonObject.getInt("student_num"));
+                userDetails.setEnrollment(jsonObject.getString("enrollment_id"));
             } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                 userDetails.setFic_id(jsonObject.getInt("fic_id"));
                 userDetails.setFic_status(jsonObject.getInt("fic_status"));
