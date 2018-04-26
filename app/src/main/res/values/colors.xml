@@ -8,4 +8,6 @@
     <color name="off_gold">#f2a900</color>
     <color name="bg_color">#f5f5dc</color>
     <color name="nav_text">#2c3e50</color>
+    <color name="tab_color">#f2c04d</color>
+    <color name="tab_not_select_color">#afafaf</color>
 </resources>

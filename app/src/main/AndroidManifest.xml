@@ -57,16 +57,20 @@
                 android:value="com.example.babar.e_rev.MainActivity" />
         </activity>
         <activity android:name=".custom_row_cm_detail" />
-        <!--<activity-->
-            <!--android:name=".sample_tab"-->
-            <!--android:label="@string/title_activity_sample_tab"-->
-            <!--android:theme="@style/AppTheme">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+        <!-- <activity -->
+        <!-- android:name=".sample_tab" -->
+        <!-- android:label="@string/title_activity_sample_tab" -->
+        <!-- android:theme="@style/AppTheme"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity android:name=".tab1" />
+        <activity android:name=".tab2" />
+        <activity android:name=".tab3" />
     </application>
 
 </manifest>

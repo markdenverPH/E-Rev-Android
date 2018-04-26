@@ -40,10 +40,6 @@ public class MainActivity extends AppCompatActivity
     int current_menu = R.id.nav_home;
     UserDetails userDetails;
     ImageView nav_profile;
-    //below is the tab layout
-    public static View tabs;
-    public static ViewPager container;
-    public static GradeAssessmentFragment.SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +57,6 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        tabs = findViewById(R.id.tabs);
-        container = (ViewPager) findViewById(R.id.container);
-        //LAST!! - WORKING ON TABS
-        mSectionsPagerAdapter = new GradeAssessmentFragment.SectionsPagerAdapter(getSupportFragmentManager());
-        container = (ViewPager) findViewById(R.id.container);
-        container.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         userDetails = new UserDetails();
@@ -144,8 +127,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        tabs.setVisibility(View.GONE);
-        container.setVisibility(View.GONE);
         if (current_menu != id) {
             fragmentTransaction = fragmentManager.beginTransaction();
             getFragmentManager().popBackStack();
