@@ -31,7 +31,11 @@ public class UserDetails {
     public static ArrayList<String> course_module_topics_path = new ArrayList<>();
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";
+<<<<<<< HEAD
     static String base = "http://192.168.1.2/Engineering/";
+=======
+    static String base = "http://192.168.1.3/Engineering/";
+>>>>>>> aeba8213b63fd8836e8df5857240d68a83c74e1a
 
     public static ArrayList<String> getCourse_module_topics_path() {
         return course_module_topics_path;
