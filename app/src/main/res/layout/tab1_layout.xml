@@ -19,13 +19,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <ExpandableListView
             android:id="@+id/lv_rcg_cw_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="false"
+            android:animationCache="false"
+            android:divider="@color/tab_not_select_color"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true"
             android:smoothScrollbar="false">
 
-        </ListView>
+        </ExpandableListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

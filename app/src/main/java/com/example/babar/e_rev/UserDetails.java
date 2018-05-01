@@ -29,24 +29,16 @@ public class UserDetails {
     public static ArrayList<String> course_module_topics = new ArrayList<>();
     public static ArrayList<Integer> course_module_topics_id = new ArrayList<>();
     public static ArrayList<String> course_module_topics_path = new ArrayList<>();
+    public static ArrayList<String> tab1_header = new ArrayList<>();
+    public static ArrayList<ArrayList<String>> tab1_content = new ArrayList<>();
+    public static ArrayList<ArrayList<ArrayList<String>>> tab1_content2 = new ArrayList<>();
+
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";
-    static String base = "http://192.168.1.3/Engineering/";
+    static String base = "http://192.168.1.2/Engineering/";
 
     public static ArrayList<String> getCourse_module_topics_path() {
         return course_module_topics_path;
-    }
-
-    public static void setCourse_module_topics_path(ArrayList<String> course_module_topics_path) {
-        UserDetails.course_module_topics_path = course_module_topics_path;
-    }
-
-    public static ArrayList<String> getCourse_module_topics() {
-        return course_module_topics;
-    }
-
-    public static void setCourse_module_topics(ArrayList<String> course_module_topics) {
-        UserDetails.course_module_topics = course_module_topics;
     }
 
     public static int getStudent_num() {
@@ -55,22 +47,6 @@ public class UserDetails {
 
     public static void setStudent_num(int student_num) {
         UserDetails.student_num = student_num;
-    }
-
-
-    @Override
-    public String toString() {
-        return "UserDetails{" +
-                "student_id=" + student_id +
-                ", offering_id=" + offering_id +
-                ", full_name='" + full_name + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", department='" + department + '\'' +
-                ", image_path='" + image_path + '\'' +
-                ", identifier='" + identifier + '\'' +
-                '}';
     }
 
     public static int getFbv_interval() {
@@ -131,10 +107,6 @@ public class UserDetails {
 
     public static String getFeedback_content() {
         return feedback_content;
-    }
-
-    public static void setFeedback_content(String feedback_content) {
-        UserDetails.feedback_content = feedback_content;
     }
 
     public static int getFic_status() {
@@ -207,14 +179,6 @@ public class UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
