@@ -35,7 +35,7 @@ public class UserDetails {
 
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";
-    static String base = "http://192.168.1.2/Engineering/";
+    static String base = "http://192.168.1.5/Engineering/";
 
     public static ArrayList<String> getCourse_module_topics_path() {
         return course_module_topics_path;

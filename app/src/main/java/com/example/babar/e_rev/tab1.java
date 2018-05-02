@@ -177,7 +177,7 @@ public class tab1 extends Fragment {    //REMEDIAL COURSEWARE GRADE
                 tv.setVisibility(View.GONE);
                 elv.setVisibility(View.VISIBLE);
                 BaseExpandableListAdapter mAdapter;
-                mAdapter = new ELA_tab1(getActivity(), userDetails.tab1_header, userDetails.tab1_content);
+                mAdapter = new ELA_tab1(getActivity(), userDetails.tab1_header, userDetails.tab1_content, getActivity());
                 elv.setAdapter(mAdapter);
             }
 
