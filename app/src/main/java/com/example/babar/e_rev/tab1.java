@@ -162,10 +162,10 @@ public class tab1 extends Fragment {    //REMEDIAL COURSEWARE GRADE
 
                         ArrayList<String> innertemp = new ArrayList<>();
                         innertemp.add(0, innerjsonObject.getString("remedial_grade_assessment_score"));
-                        innertemp.add(0, innerjsonObject.getString("remedial_grade_assessment_total"));
-                        innertemp.add(0, innerjsonObject.getString("remedial_grade_assessment_time"));
-                        innertemp.add(0, innerjsonObject.getString("courseware_name"));
-                        innertemp.add(0, innerjsonObject.getString("topic_name"));
+                        innertemp.add(1, innerjsonObject.getString("remedial_grade_assessment_total"));
+                        innertemp.add(2, innerjsonObject.getString("remedial_grade_assessment_time"));
+                        innertemp.add(3, innerjsonObject.getString("courseware_name"));
+                        innertemp.add(4, innerjsonObject.getString("topic_name"));
                         temp2.add(i2, innertemp);
 
                         i2++;
@@ -177,7 +177,7 @@ public class tab1 extends Fragment {    //REMEDIAL COURSEWARE GRADE
                 tv.setVisibility(View.GONE);
                 elv.setVisibility(View.VISIBLE);
                 BaseExpandableListAdapter mAdapter;
-                mAdapter = new ELA_tab1(getActivity(), userDetails.tab1_header, userDetails.tab1_content, getActivity());
+                mAdapter = new ELA_tab1(getActivity(), userDetails.tab1_header, userDetails.tab1_content, getActivity(), userDetails.tab1_content2);
                 elv.setAdapter(mAdapter);
             }
 

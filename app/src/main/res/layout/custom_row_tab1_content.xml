@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tab1_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="left|center"
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/@android:style/TextAppearance.Material.Widget.TextView"
-        style="@android:style/TextAppearance.Material.Widget.TextView"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:lines="1"
         android:paddingBottom="13dp"
         android:paddingLeft="43dp"
-        android:paddingRight="13dp"
         android:paddingTop="13dp"
         android:text="TextView"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:text="TextView"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="13dp"
+        android:layout_weight="1"
+        android:foregroundGravity="right"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_remarks"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:srcCompat="@mipmap/remarks_checked" />
+    </LinearLayout>
 
 </LinearLayout>
