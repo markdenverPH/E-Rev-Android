@@ -32,6 +32,9 @@ public class UserDetails {
     public static ArrayList<String> tab1_header = new ArrayList<>();
     public static ArrayList<ArrayList<String>> tab1_content = new ArrayList<>();
     public static ArrayList<ArrayList<ArrayList<String>>> tab1_content2 = new ArrayList<>();
+    public static ArrayList<String> tab2_header = new ArrayList<>();
+    public static ArrayList<ArrayList<String>> tab2_content = new ArrayList<>();
+    public static ArrayList<ArrayList<ArrayList<String>>> tab2_content2 = new ArrayList<>();
 
     private String frag_hold;
     //    static String base = "http://feu-erev.esy.es/";

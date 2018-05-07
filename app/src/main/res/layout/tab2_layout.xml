@@ -1,15 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".tab2">
 
+    <!-- TODO: Update blank fragment layout -->
+
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="tab2" />
-</LinearLayout>
+        android:id="@+id/tv_no_cg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No data to show"
+        android:textSize="18sp" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/cg_swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ExpandableListView
+            android:id="@+id/lv_cg_cw_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="false"
+            android:animationCache="false"
+            android:divider="@color/tab_not_select_color"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true"
+            android:smoothScrollbar="false">
+
+        </ExpandableListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

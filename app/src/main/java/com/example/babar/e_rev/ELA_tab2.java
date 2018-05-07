@@ -7,7 +7,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -18,7 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ELA_tab1 extends BaseExpandableListAdapter {
+public class ELA_tab2 extends BaseExpandableListAdapter {
 
     Context context;
     ArrayList<String> header;
@@ -27,7 +26,7 @@ public class ELA_tab1 extends BaseExpandableListAdapter {
     Dialog dialog;
     Activity activity;
 
-    public ELA_tab1(Context context, ArrayList<String> header, ArrayList<ArrayList<String>> content, Activity activity,
+    public ELA_tab2(Context context, ArrayList<String> header, ArrayList<ArrayList<String>> content, Activity activity,
                     ArrayList<ArrayList<ArrayList<String>>> content2){
         this.header = header;
         this.content = content;
@@ -100,7 +99,7 @@ public class ELA_tab1 extends BaseExpandableListAdapter {
         int total = Integer.parseInt(content2.get(groupPosition).get(childPosition).get(1));
         double remarks_perc = Double.valueOf(score)/Double.valueOf(total);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.iv_remarks);
-        System.out.println(remarks_perc);
+
         if(remarks_perc >= 0.70)
             imageView.setImageResource(R.mipmap.remarks_checked);
         else

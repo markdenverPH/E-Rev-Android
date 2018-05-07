@@ -72,7 +72,7 @@ public class tab1 extends Fragment {    //REMEDIAL COURSEWARE GRADE
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(base + "Mobile/grade_assess");
+                URL url = new URL(base + "Mobile/rem_grade_assess");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoInput(true);
@@ -87,12 +87,9 @@ public class tab1 extends Fragment {    //REMEDIAL COURSEWARE GRADE
                 cv.put("firstname", userDetails.getFirstname());
                 cv.put("midname", userDetails.getMidname());
                 cv.put("lastname", userDetails.getLastname());
-                if(userDetails.getIdentifier().equalsIgnoreCase("student")){
-                    cv.put("id", userDetails.getStudent_id());
-                    cv.put("offering_id", userDetails.getOffering_id());
-                } else {
-                    cv.put("id", userDetails.getFic_id());
-                }
+                cv.put("id", userDetails.getStudent_id());
+                cv.put("offering_id", userDetails.getOffering_id());
+
                 bw.write(createPostString(cv));
                 bw.flush();
                 bw.close();
