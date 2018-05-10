@@ -6,26 +6,15 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +30,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,22 +41,21 @@ public class tab3 extends Fragment {
     JSONObject jsonObject;
     TextView tv;
     ArrayList<String> subject_area;
-    ArrayList<String> score;
-    ArrayList<String> total;
-    BarChart barChart;
+    ArrayList<Integer> perc;
+    RecyclerView pps_recycle;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab3_layout, container, false);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.pps_swiperefresh);
+        swipeRefreshLayout = view.findViewById(R.id.pps_swiperefresh);
         base = userDetails.getBase();
-        tv = (TextView) view.findViewById(R.id.tv_no_pps);
+        tv = view.findViewById(R.id.tv_no_pps);
+        pps_recycle = view.findViewById(R.id.pps_recycle);
         userDetails = new UserDetails();
-        barChart = (BarChart) view.findViewById(R.id.barchart);
         subject_area = new ArrayList<>();
-        score = new ArrayList<>();
-        total = new ArrayList<>();
+        perc = new ArrayList<>();
+        pps_recycle = view.findViewById(R.id.pps_recycle);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -143,9 +130,10 @@ public class tab3 extends Fragment {
 
     public void parseJSON(String strJSON) {
         try {
-
+            subject_area.clear();
+            perc.clear();
             if (strJSON == "") { //if empty json
-                barChart.setVisibility(View.GONE);
+                pps_recycle.setVisibility(View.GONE);
                 tv.setVisibility(View.VISIBLE);
             } else {
                 jsonObject = new JSONObject(strJSON);
@@ -154,13 +142,20 @@ public class tab3 extends Fragment {
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
                     subject_area.add(i, jsonObject.getString("name"));
-                    score.add(i, jsonObject.getString("score"));
-                    total.add(i, jsonObject.getString("total"));
+                    String score = jsonObject.getString("score");
+                    String total = jsonObject.getString("total");
+                    float percentage = (Float.parseFloat(score)/Float.parseFloat(total)) * 100;
+                    perc.add(i, (int) percentage);
                     i++;
                 }
                 tv.setVisibility(View.GONE);
-                barChart.setVisibility(View.VISIBLE);
-                setup_piechart();
+                pps_recycle.setVisibility(View.VISIBLE);
+
+                custom_row_tab3 adapter = new custom_row_tab3(subject_area, perc);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                pps_recycle.setLayoutManager(mLayoutManager);
+                pps_recycle.setItemAnimator(new DefaultItemAnimator());
+                pps_recycle.setAdapter(adapter);
             }
 
         } catch (Exception e) {
@@ -168,49 +163,6 @@ public class tab3 extends Fragment {
         }
     }
 
-    private void setup_piechart(){
-        barChart.setDrawBarShadow(false);
-        barChart.setDrawValueAboveBar(true);
-        barChart.setMaxVisibleValueCount(50);
-        barChart.setPinchZoom(false);
-        barChart.setDrawGridBackground(true);
-        barChart.getDescription().setEnabled(false);
-
-        XAxis xAxis = barChart.getXAxis();
-//        xAxis.setPosition(XAxisPosition.BOTTOM);
-//        xAxis.setTypeface(mTf);
-//        xAxis.setDrawGridLines(false);
-//        xAxis.setSpaceBetweenLabels(2);
-
-        YAxis rightaxis = barChart.getAxisRight();
-//        leftAxis.setTypeface(mTf);
-//        leftAxis.setLabelCount(8);
-//        leftAxis.setValueFormatter(custom);
-//        leftAxis.setPosition(YAxisLabelPosition.OUTSIDE_CHART);
-//        leftAxis.setSpaceTop(15f);
-            rightaxis.setEnabled(false);
-        Legend l = barChart.getLegend();
-//        l.setForm(LegendForm.SQUARE);
-        l.setFormSize(9f);
-        l.setTextSize(11f);
-//        l.setXEntrySpace(4f);
-
-        barChart.animateXY(1000, 2500);
-
-        List<BarEntry> barEntries = new ArrayList<>();
-
-        for (int i = 0; i < subject_area.size(); i++){
-            float fl = Float.parseFloat(score.get(i))/Float.parseFloat(total.get(i)) * 100;
-            barEntries.add(new BarEntry(i, fl));
-        }
-
-        BarDataSet barDataSet = new BarDataSet(barEntries, "Percentage");
-        barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        BarData barData = new BarData(barDataSet);
-        barData.setBarWidth(0.9f);
-
-        barChart.setData(barData);
-    }
 
     public String createPostString(ContentValues cv) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();

@@ -10,4 +10,6 @@
     <color name="nav_text">#2c3e50</color>
     <color name="tab_color">#f2c04d</color>
     <color name="tab_not_select_color">#afafaf</color>
+    <color name="tab3_card">#f1c40f</color>
+    <color name="tab3_bg">#6dff6d</color>
 </resources>

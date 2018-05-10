@@ -60,6 +60,7 @@
         <activity android:name=".tab1" />
         <activity android:name=".tab2" />
         <activity android:name=".tab3" />
+        <activity android:name=".custom_row_tab3"></activity>
     </application>
 
 </manifest>
