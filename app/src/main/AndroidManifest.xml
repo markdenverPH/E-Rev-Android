@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_final"
@@ -61,6 +60,18 @@
         <activity android:name=".tab2" />
         <activity android:name=".tab3" />
         <activity android:name=".custom_row_tab3"></activity>
+        <service
+            android:name=".FCM_FirebaseInstanceId">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".FCM_FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
