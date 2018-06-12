@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -135,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String strJSON) {
             if (strJSON.isEmpty()) {
                 dialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_LONG).show();
             } else if (!strJSON.isEmpty()) {
                 parseJSON(strJSON);
                 dialog.dismiss();

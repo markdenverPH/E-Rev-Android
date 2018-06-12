@@ -2,27 +2,45 @@ package com.example.babar.e_rev;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +58,9 @@ public class MainActivity extends AppCompatActivity
     int current_menu = R.id.nav_home;
     UserDetails userDetails;
     ImageView nav_profile;
+    String base;
+    JSONArray jsonArray;
+    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +81,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         userDetails = new UserDetails();
+        base = userDetails.getBase();
+        new update_token().execute();   //update token to mysql
         //determines the menu items to be shown depending on identifier
         if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
             navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
@@ -191,6 +214,163 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    class update_token extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                URL url = new URL(base + "Mobile/update_token");
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setDoInput(true);
+                con.setDoOutput(true);
+                OutputStream os = con.getOutputStream();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+                ContentValues cv = new ContentValues();
+                Log.d("FCM_token", FirebaseInstanceId.getInstance().getToken());
+                cv.put("token", FirebaseInstanceId.getInstance().getToken());
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    cv.put("offering_id", userDetails.getOffering_id());
+                    cv.put("id", userDetails.getStudent_id());
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    cv.put("id", userDetails.getFic_id());
+                }
+                cv.put("identifier", userDetails.getIdentifier());
+                cv.put("department", userDetails.getDepartment());
+                cv.put("firstname", userDetails.getFirstname());
+                cv.put("midname", userDetails.getMidname());
+                cv.put("lastname", userDetails.getLastname());
+                bw.write(createPostString(cv));
+                bw.flush();
+                bw.close();
+                os.close();
+//                int rc = con.getResponseCode();
+
+                InputStream is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+                StringBuilder sb = new StringBuilder();
+                String str = "";
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
+                }
+                br.close();
+                is.close();
+                con.disconnect();
+                return sb.toString();
+            } catch (Exception e) {     //error logs
+                Log.d("update_token", e.toString());
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String strJSON) {
+            parseJSON(strJSON);
+        }
+    }
+
+
+    public void update_token(){
+//        try {
+//            URL url = new URL(base + "Mobile/update_token");
+//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//            con.setRequestMethod("POST");
+//            con.setDoInput(true);
+//            con.setDoOutput(true);
+//            OutputStream os = con.getOutputStream();
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+//
+//            ContentValues cv = new ContentValues();
+//            cv.put("token", FirebaseInstanceId.getInstance().getToken());
+//            if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+//                cv.put("offering_id", userDetails.getOffering_id());
+//                cv.put("id", userDetails.getStudent_id());
+//            } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+//                cv.put("id", userDetails.getFic_id());
+//            }
+//            cv.put("identifier", userDetails.getIdentifier());
+//            cv.put("department", userDetails.getDepartment());
+//            cv.put("firstname", userDetails.getFirstname());
+//            cv.put("midname", userDetails.getMidname());
+//            cv.put("lastname", userDetails.getLastname());
+//            bw.write(createPostString(cv));
+//            bw.flush();
+//            bw.close();
+//            os.close();
+////                int rc = con.getResponseCode();
+//
+//            InputStream is = con.getInputStream();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//
+//            StringBuilder sb = new StringBuilder();
+//            String str = "";
+//            while ((str = br.readLine()) != null) {
+//                sb.append(str);
+//            }
+//            br.close();
+//            is.close();
+//            con.disconnect();
+//            parseJSON(sb.toString());
+//        } catch (Exception e) {     //error logs
+//            Log.d("update_token", e.toString());
+//        }
+    }
+
+    public void parseJSON(String strJSON) {
+        Log.d("update_token", strJSON);
+        try {
+            jsonObject = new JSONObject(strJSON);
+            jsonArray = jsonObject.getJSONArray("result");
+            jsonObject = jsonArray.getJSONObject(0);
+            String msg = jsonObject.getString("msg");
+            if(msg.equalsIgnoreCase("not_enrolled")){
+                SharedPreferences sp = getSharedPreferences("IDValue", 0);
+                SharedPreferences.Editor spedit = sp.edit();
+                spedit.putBoolean("logged_in", false);
+                spedit.apply();
+
+                try {
+                    String filename = "userdetails";
+                    FileOutputStream outputStream;
+                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                    outputStream.write("".getBytes());
+                    outputStream.close();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } catch (Exception e) {
+            Log.i("update_token", String.valueOf(e));
+        }
+    }
+
+    public String createPostString(ContentValues cv) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder();
+        boolean flag = true;
+        Set set = cv.valueSet();
+
+        for (Map.Entry<String, Object> v : cv.valueSet()) {
+            if (flag) {
+                flag = false;
+            } else {
+                sb.append("&");
+            }
+            sb.append(URLEncoder.encode(v.getKey(), "UTF-8"));
+            sb.append("=");
+            sb.append(URLEncoder.encode(v.getValue().toString(), "UTF-8"));
+        }
+        return sb.toString();
     }
 
 }
