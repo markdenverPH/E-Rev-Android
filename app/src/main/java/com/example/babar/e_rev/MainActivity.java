@@ -2,7 +2,6 @@ package com.example.babar.e_rev;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
@@ -69,6 +67,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.setTitle("Home");
+
+        SharedPreferences sp = getSharedPreferences("NotifyID", 0);
+        if (sp.getInt("notify_id", 0) == 0) {   //checks if first run; if so, then update to 1
+            SharedPreferences.Editor spedit = sp.edit();
+            spedit.putInt("notify_id", 1);
+            spedit.apply();
+            Log.d("NotifyID", String.valueOf(sp.getInt("notify_id", 0)));
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -275,53 +281,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(String strJSON) {
             parseJSON(strJSON);
         }
-    }
-
-
-    public void update_token(){
-//        try {
-//            URL url = new URL(base + "Mobile/update_token");
-//            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//            con.setRequestMethod("POST");
-//            con.setDoInput(true);
-//            con.setDoOutput(true);
-//            OutputStream os = con.getOutputStream();
-//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-//
-//            ContentValues cv = new ContentValues();
-//            cv.put("token", FirebaseInstanceId.getInstance().getToken());
-//            if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
-//                cv.put("offering_id", userDetails.getOffering_id());
-//                cv.put("id", userDetails.getStudent_id());
-//            } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
-//                cv.put("id", userDetails.getFic_id());
-//            }
-//            cv.put("identifier", userDetails.getIdentifier());
-//            cv.put("department", userDetails.getDepartment());
-//            cv.put("firstname", userDetails.getFirstname());
-//            cv.put("midname", userDetails.getMidname());
-//            cv.put("lastname", userDetails.getLastname());
-//            bw.write(createPostString(cv));
-//            bw.flush();
-//            bw.close();
-//            os.close();
-////                int rc = con.getResponseCode();
-//
-//            InputStream is = con.getInputStream();
-//            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-//
-//            StringBuilder sb = new StringBuilder();
-//            String str = "";
-//            while ((str = br.readLine()) != null) {
-//                sb.append(str);
-//            }
-//            br.close();
-//            is.close();
-//            con.disconnect();
-//            parseJSON(sb.toString());
-//        } catch (Exception e) {     //error logs
-//            Log.d("update_token", e.toString());
-//        }
     }
 
     public void parseJSON(String strJSON) {

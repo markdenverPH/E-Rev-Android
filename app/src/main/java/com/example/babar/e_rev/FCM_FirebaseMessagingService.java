@@ -1,10 +1,10 @@
 package com.example.babar.e_rev;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -38,6 +38,8 @@ public class FCM_FirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             String body = remoteMessage.getNotification().getBody();
             String title = remoteMessage.getNotification().getTitle();
+            String data = remoteMessage.getData().get("test");
+            Log.d("FCM_DATA", data);
             Log.d("FCM_BODY", "Message Notification Body: " + body);
             Log.d("FCM_TITLE", "Message Notification Title: " + title);
             pop_notif(body, title);
@@ -45,14 +47,24 @@ public class FCM_FirebaseMessagingService extends FirebaseMessagingService {
     }
 
     public void pop_notif(String body, String title){
+        SharedPreferences sp = getSharedPreferences("NotifyID", 0);
+        int notify_id = sp.getInt("notify_id", 0);
+        Log.d("NotifyID_get", String.valueOf(notify_id));
+
         NotificationCompat.Builder notif_builder = new NotificationCompat.Builder(this, "E-Rev")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_final2))
                 .setSmallIcon(R.drawable.notif_icon)
                 .setContentTitle(title)
                 .setContentText(body)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND|NotificationCompat.DEFAULT_LIGHTS| NotificationCompat.DEFAULT_VIBRATE)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, notif_builder.build());
+        manager.notify(notify_id, notif_builder.build());
+        //update notify_id to sp
+        SharedPreferences.Editor spedit = sp.edit();
+        spedit.putInt("notify_id", notify_id+1);
+        spedit.apply();
+        Log.d("NotifyID_update", String.valueOf(notify_id+1));
     }
 
 }
