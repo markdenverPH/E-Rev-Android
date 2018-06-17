@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -128,6 +129,9 @@ public class HomeFragment extends Fragment {
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch(ConnectException e){
+                //replace with snackbar
+                Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             } catch (Exception e) {     //error logs
                 Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }

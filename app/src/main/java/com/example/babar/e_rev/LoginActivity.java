@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,8 +26,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Set;
@@ -118,6 +121,10 @@ public class LoginActivity extends AppCompatActivity {
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch (ConnectException e){
+                //replace with snackbar
+                dialog.dismiss();
+                return "no_connection";
             } catch (Exception e) {     //error logs
                 Log.d("check", e.toString());
                 dialog.dismiss();
@@ -127,14 +134,16 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String strJSON) {
-            if (strJSON.isEmpty()) {
+            View cl = findViewById(R.id.login_main);
+            if (strJSON.equalsIgnoreCase("no_connection")) {
+                Snackbar.make(cl, "Please connect to the Internet and try again.", Snackbar.LENGTH_LONG).show();
+            } else if (strJSON.isEmpty()) {
                 dialog.dismiss();
-                Toast.makeText(getApplicationContext(), "Invalid Account", Toast.LENGTH_LONG).show();
+                Snackbar.make(cl, "Invalid account. Please try again.", Snackbar.LENGTH_LONG).show();
             } else if (!strJSON.isEmpty()) {
                 parseJSON(strJSON);
                 dialog.dismiss();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                Toast.makeText(getApplicationContext(), userDetails.toString(), Toast.LENGTH_LONG).show();
                 startActivity(intent);
                 finish();
             }
@@ -276,4 +285,5 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }

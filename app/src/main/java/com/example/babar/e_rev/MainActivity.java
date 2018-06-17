@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -195,23 +197,7 @@ public class MainActivity extends AppCompatActivity
                 this.setTitle("Attendance");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_logout) {
-                SharedPreferences sp = getSharedPreferences("IDValue", 0);
-                SharedPreferences.Editor spedit = sp.edit();
-                spedit.putBoolean("logged_in", false);
-                spedit.apply();
-
-                try {
-                    String filename = "userdetails";
-                    FileOutputStream outputStream;
-                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                    outputStream.write("".getBytes());
-                    outputStream.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
+                new delete_token().execute();
             }
             current_menu = id;
 
@@ -220,6 +206,32 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout(){
+        //tells the system the user is not logged in
+        SharedPreferences sp = getSharedPreferences("IDValue", 0);
+        SharedPreferences.Editor spedit = sp.edit();
+        spedit.putBoolean("logged_in", false);
+        spedit.apply();
+        //reset to zero notify_id
+        sp = getSharedPreferences("NotifyID", 0);
+        spedit = sp.edit();
+        spedit.putInt("notify_id", 0);
+        spedit.apply();
+
+        try {
+            String filename = "userdetails";
+            FileOutputStream outputStream;
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write("".getBytes());
+            outputStream.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     class update_token extends AsyncTask<Void, Void, String> {
@@ -240,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 
                 ContentValues cv = new ContentValues();
-                Log.d("FCM_token", FirebaseInstanceId.getInstance().getToken());
+                Log.d("FCM_token", FirebaseInstanceId.getInstance().getToken()); //must delete
                 cv.put("token", FirebaseInstanceId.getInstance().getToken());
                 if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
                     cv.put("offering_id", userDetails.getOffering_id());
@@ -291,29 +303,92 @@ public class MainActivity extends AppCompatActivity
             jsonObject = jsonArray.getJSONObject(0);
             String msg = jsonObject.getString("msg");
             if(msg.equalsIgnoreCase("not_enrolled")){
-                SharedPreferences sp = getSharedPreferences("IDValue", 0);
-                SharedPreferences.Editor spedit = sp.edit();
-                spedit.putBoolean("logged_in", false);
-                spedit.apply();
-
-                try {
-                    String filename = "userdetails";
-                    FileOutputStream outputStream;
-                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-                    outputStream.write("".getBytes());
-                    outputStream.close();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                finish();
+                logout();
             }
         } catch (Exception e) {
             Log.i("update_token", String.valueOf(e));
         }
     }
 
+    class delete_token extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                URL url = new URL(base + "Mobile/delete_token");
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("POST");
+                con.setDoInput(true);
+                con.setDoOutput(true);
+                OutputStream os = con.getOutputStream();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+                ContentValues cv = new ContentValues();
+                if (userDetails.getIdentifier().equalsIgnoreCase("student")) {
+                    cv.put("id", userDetails.getStudent_id());
+                } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
+                    cv.put("id", userDetails.getFic_id());
+                }
+                cv.put("identifier", userDetails.getIdentifier());
+                bw.write(createPostString(cv));
+                bw.flush();
+                bw.close();
+                os.close();
+//                int rc = con.getResponseCode();
+
+                InputStream is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+                StringBuilder sb = new StringBuilder();
+                String str = "";
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
+                }
+                br.close();
+                is.close();
+                con.disconnect();
+                return sb.toString();
+            } catch (ConnectException e) {     //error logs
+                return "no_connection";
+            } catch (Exception e) {     //error logs
+                Log.d("delete_token1", e.toString());
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String strJSON) {
+            Log.d("delete_token2", strJSON);
+            parseJSON2(strJSON);
+        }
+    }
+    public void parseJSON2(String strJSON){
+        View cl = findViewById(R.id.coor_layout);
+        if(strJSON.equalsIgnoreCase("no_connection")){
+            //please connect to internet (snackbar)
+            Snackbar.make(cl, "Internet is required before logging out. Please try again.", Snackbar.LENGTH_LONG).show();
+        } else {
+            try {
+                Log.d("delete_token", "test1");
+                jsonObject = new JSONObject(strJSON);
+                jsonArray = jsonObject.getJSONArray("result");
+                jsonObject = jsonArray.getJSONObject(0);
+                String msg = jsonObject.getString("msg");
+                if(msg.equalsIgnoreCase("true")){
+                    logout();
+                } else {
+                    //please connect to internet (snackbar)
+                    Snackbar.make(cl, "An error occured to the server. Please try again.", Snackbar.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                Log.i("delete_token3", String.valueOf(e)); // MAY PROBLEM DITO
+            }
+        }
+    }
     public String createPostString(ContentValues cv) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         boolean flag = true;
