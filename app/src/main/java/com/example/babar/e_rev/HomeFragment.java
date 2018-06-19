@@ -181,7 +181,6 @@ public class HomeFragment extends Fragment {
                         userDetails.announcement_created_at, userDetails.announcement_announcer);
                 lv.setAdapter(mAdapter);
             }
-
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
         }

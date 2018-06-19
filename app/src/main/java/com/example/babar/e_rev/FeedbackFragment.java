@@ -40,7 +40,7 @@ import java.util.Set;
  * A simple {@link Fragment} subclass.
  */
 public class FeedbackFragment extends Fragment {
-    public UserDetails userDetails;
+    protected UserDetails userDetails;
     JSONArray jsonArray;
     JSONObject jsonObject;
     String base;
@@ -51,7 +51,6 @@ public class FeedbackFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // LASt - create feedback viewing for prof/fic
         View view = inflater.inflate(R.layout.fragment_feedback, container, false);
         userDetails = new UserDetails();
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fb_swipe);

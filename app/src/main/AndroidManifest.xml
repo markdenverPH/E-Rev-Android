@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_final2"
@@ -11,8 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_final2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notif_icon" />
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,19 +64,20 @@
         <activity android:name=".tab1" />
         <activity android:name=".tab2" />
         <activity android:name=".tab3" />
-        <activity android:name=".custom_row_tab3"></activity>
-        <service
-            android:name=".FCM_FirebaseInstanceId">
+        <activity android:name=".custom_row_tab3" />
+
+        <service android:name=".FCM_FirebaseInstanceId">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".FCM_FirebaseMessagingService">
+        <service android:name=".FCM_FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".AttendanceDetail"></activity>
     </application>
 
 </manifest>
