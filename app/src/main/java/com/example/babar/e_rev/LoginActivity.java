@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String strJSON) {
             View cl = findViewById(R.id.login_main);
             if (strJSON.equalsIgnoreCase("no_connection")) {
-                Snackbar.make(cl, "Please connect to the Internet and try again.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(cl, "Cannot connect to the server, please connect to the Internet and try again.", Snackbar.LENGTH_LONG).show();
             } else if (strJSON.isEmpty()) {
                 dialog.dismiss();
                 Snackbar.make(cl, "Invalid account. Please try again.", Snackbar.LENGTH_LONG).show();

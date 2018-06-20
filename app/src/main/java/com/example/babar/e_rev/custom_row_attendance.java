@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class custom_row_attendance extends BaseAdapter{
-    ArrayList<String> lect_id;
+    ArrayList<Integer> lect_id;
     ArrayList<String> firstname;
     ArrayList<String> midname;
     ArrayList<String> lastname;
@@ -24,7 +24,7 @@ public class custom_row_attendance extends BaseAdapter{
     ImageView attend_profile;
     UserDetails userDetails = new UserDetails();
     private static LayoutInflater inflater = null;
-    public custom_row_attendance(Context context, ArrayList<String> lect_id, ArrayList<String> firstname, ArrayList<String> midname,
+    public custom_row_attendance(Context context, ArrayList<Integer> lect_id, ArrayList<String> firstname, ArrayList<String> midname,
                                  ArrayList<String> lastname, ArrayList<String> image_path){
         this.lect_id = lect_id;
         this.firstname = firstname;

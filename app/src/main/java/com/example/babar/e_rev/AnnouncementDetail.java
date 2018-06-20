@@ -18,9 +18,9 @@ public class AnnouncementDetail extends AppCompatActivity {
         UserDetails userDetails = new UserDetails();
         item_pos = userDetails.getAd_item();
         getSupportActionBar().setSubtitle("From: " + userDetails.announcement_announcer.get(item_pos));
-        title = (TextView) findViewById(R.id.ad_title);
-        date = (TextView) findViewById(R.id.ad_date);
-        content = (TextView) findViewById(R.id.ad_content);
+        title = findViewById(R.id.ad_title);
+        date = findViewById(R.id.ad_date);
+        content = findViewById(R.id.ad_content);
 
         title.setText(userDetails.announcement_title.get(item_pos));
         date.setText(userDetails.announcement_created_at.get(item_pos));

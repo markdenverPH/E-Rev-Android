@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,7 +42,11 @@ public class AttendanceFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     ListView lv;
     TextView tv_message;
-
+    ArrayList<Integer> lect_id = new ArrayList<>();
+    ArrayList<String> firstname = new ArrayList<>();
+    ArrayList<String> midname = new ArrayList<>();
+    ArrayList<String> lastname = new ArrayList<>();
+    ArrayList<String> image_path = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,7 +70,8 @@ public class AttendanceFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), AttendanceDetail.class);
-                userDetails.setAd_item(position);
+                userDetails.setAd_item(lect_id.get(position));
+                intent.putExtra("lect_name", firstname.get(position) + " " + midname.get(position) + " " + lastname.get(position));
                 getActivity().startActivity(intent);
             }
         });
@@ -115,7 +119,7 @@ public class AttendanceFragment extends Fragment {
                 con.disconnect();
                 return sb.toString();
             } catch (ConnectException e) {     //error logs
-                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Please check your internet connection", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("attendance_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }
@@ -132,12 +136,6 @@ public class AttendanceFragment extends Fragment {
     public void parseJSON(String strJSON) {
         Log.d("strJSON", strJSON);
         try {
-            ArrayList<String> lect_id = new ArrayList<>();
-            ArrayList<String> firstname = new ArrayList<>();
-            ArrayList<String> midname = new ArrayList<>();
-            ArrayList<String> lastname = new ArrayList<>();
-            ArrayList<String> image_path = new ArrayList<>();
-
             if (strJSON == "") { //if empty json
                 lv.setVisibility(View.GONE);
                 tv_message.setVisibility(View.VISIBLE);
@@ -149,7 +147,7 @@ public class AttendanceFragment extends Fragment {
 
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
-                    lect_id.add(i, jsonObject.getString("lecturer_id"));
+                    lect_id.add(i, jsonObject.getInt("lecturer_id"));
                     firstname.add(jsonObject.getString("firstname"));
                     midname.add(jsonObject.getString("midname"));
                     lastname.add(jsonObject.getString("lastname"));
