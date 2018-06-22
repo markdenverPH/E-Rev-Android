@@ -15,6 +15,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notif_icon" />
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,13 +79,14 @@
 
         <activity
             android:name=".AttendanceDetail"
-            android:label="Lecturer's Attendance"
+            android:label="Lecturer&apos;s Attendance"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme2">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.babar.e_rev.MainActivity" />
         </activity>
+        <activity android:name=".custom_row_attendance_detail"></activity>
     </application>
 
 </manifest>

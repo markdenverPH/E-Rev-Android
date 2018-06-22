@@ -145,7 +145,7 @@ public class FeedbackFragment extends Fragment {
                 con.disconnect();
                 return sb.toString();
             } catch (Exception e) {     //error logs
-                Log.d("feedbackerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Log.d("feedback_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             }
             return "";
         }
@@ -158,7 +158,7 @@ public class FeedbackFragment extends Fragment {
     }
 
     public void parseJSON_lect(String strJSON) {
-        Log.d("fb_strJSON", strJSON);
+        Log.d("feedback_strJSON", strJSON);
         try {
             jsonObject = new JSONObject(strJSON);
             int i = 0;

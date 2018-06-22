@@ -65,7 +65,6 @@ public class AttendanceFragment extends Fragment {
             }
         });
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,6 +134,11 @@ public class AttendanceFragment extends Fragment {
 
     public void parseJSON(String strJSON) {
         Log.d("strJSON", strJSON);
+        lect_id.clear();
+        firstname.clear();
+        midname.clear();
+        lastname.clear();
+        image_path.clear();
         try {
             if (strJSON == "") { //if empty json
                 lv.setVisibility(View.GONE);
