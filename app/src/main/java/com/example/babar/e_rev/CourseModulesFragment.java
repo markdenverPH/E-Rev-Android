@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -99,9 +101,6 @@ public class CourseModulesFragment extends Fragment {
 
                 cv.put("department", userDetails.getDepartment());
                 cv.put("identifier", userDetails.getIdentifier());
-                cv.put("firstname", userDetails.getFirstname());
-                cv.put("midname", userDetails.getMidname());
-                cv.put("lastname", userDetails.getLastname());
                 if(userDetails.getIdentifier().equalsIgnoreCase("student")){
                     cv.put("id", userDetails.getStudent_id());
                     cv.put("offering_id", userDetails.getOffering_id());
@@ -126,8 +125,11 @@ public class CourseModulesFragment extends Fragment {
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch (ConnectException e){
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("course_module_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -168,6 +170,7 @@ public class CourseModulesFragment extends Fragment {
 
         } catch (Exception e) {
             Log.i("course_module_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

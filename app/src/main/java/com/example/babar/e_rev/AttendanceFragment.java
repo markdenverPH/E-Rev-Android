@@ -121,6 +121,7 @@ public class AttendanceFragment extends Fragment {
                 Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("attendance_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -166,6 +167,7 @@ public class AttendanceFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.i("attendance_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

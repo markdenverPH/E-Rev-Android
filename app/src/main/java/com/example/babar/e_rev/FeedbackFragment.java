@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -144,8 +146,11 @@ public class FeedbackFragment extends Fragment {
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch (ConnectException e) {     //error logs
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("feedback_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -211,6 +216,7 @@ public class FeedbackFragment extends Fragment {
             lv.setAdapter(mAdapter);
         } catch (Exception e) {
             Log.i("feedback_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

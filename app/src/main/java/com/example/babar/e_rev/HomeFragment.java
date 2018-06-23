@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,10 +44,6 @@ import java.util.Set;
  */
 public class HomeFragment extends Fragment {
 
-
-    /*public HomeFragment() {
-        // Required empty public constructor
-    }*/
     SwipeRefreshLayout swipeRefreshLayout;
     String base;
     public UserDetails userDetails;
@@ -61,6 +58,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        userDetails = new UserDetails();
         base = userDetails.getBase();
         lv = (ListView) rootView.findViewById(R.id.lv_announce);
         no_announcements = (TextView) rootView.findViewById(R.id.tv_no_announcements);
@@ -82,8 +80,6 @@ public class HomeFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
-
-        userDetails = new UserDetails();
 
         return rootView;
     }
@@ -130,10 +126,10 @@ public class HomeFragment extends Fragment {
                 con.disconnect();
                 return sb.toString();
             } catch(ConnectException e){
-                //replace with snackbar
-                Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -183,6 +179,7 @@ public class HomeFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

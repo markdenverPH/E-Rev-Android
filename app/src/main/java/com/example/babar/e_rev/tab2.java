@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -107,8 +109,11 @@ public class tab2 extends Fragment {
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch(ConnectException e){
+                Snackbar.make(getActivity().findViewById(R.id.tab2_base), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("tab2_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(getActivity().findViewById(R.id.tab2_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -179,6 +184,7 @@ public class tab2 extends Fragment {
 
         } catch (Exception e) {
             Log.i("tab2_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(getActivity().findViewById(R.id.tab2_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

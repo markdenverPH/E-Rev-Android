@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -135,8 +137,11 @@ DownloadManager downloadManager;
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch (ConnectException e){
+                Snackbar.make(findViewById(R.id.cm_detail_base), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("cm_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(findViewById(R.id.cm_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -163,7 +168,6 @@ DownloadManager downloadManager;
                 jsonObject = new JSONObject(strJSON);
                 jsonArray = jsonObject.getJSONArray("result");
                 int i = 0;
-//LAST!!!
                 while (jsonArray.length() > i) {
                     jsonObject = jsonArray.getJSONObject(i);
                     userDetails.course_module_topics.add(i, jsonObject.getString("course_modules_name"));
@@ -182,6 +186,7 @@ DownloadManager downloadManager;
 
         } catch (Exception e) {
             Log.i("cm_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(findViewById(R.id.cm_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

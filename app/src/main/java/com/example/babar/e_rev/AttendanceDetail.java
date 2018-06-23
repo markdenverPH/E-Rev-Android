@@ -88,11 +88,20 @@ public class AttendanceDetail extends AppCompatActivity {
                 TextView time_in = v.findViewById(R.id.ad_time_in);
                 TextView time_out = v.findViewById(R.id.ad_time_out);
                 TextView rendered_hours = v.findViewById(R.id.ad_rendered_hours);
-                TextView remarks_s = v.findViewById(R.id.ad_remarks_s);
-                TextView remarks_e = v.findViewById(R.id.ad_remarks_e);
+                TextView remarks_ss = v.findViewById(R.id.ad_remarks_s);
+                TextView remarks_ee = v.findViewById(R.id.ad_remarks_e);
+                TextView ad_date = v.findViewById(R.id.ad_date);
                 Button close = (Button) v.findViewById(R.id.attend_detail_dialog_close);
 
-                //LASTTTT - design and set values
+                ad_id.setText(lecturer_attendance_id.get(position));
+                sched_s.setText(sched_start.get(position));
+                sched_e.setText(sched_end.get(position));
+                time_in.setText(lecturer_attendance_in.get(position));
+                time_out.setText(lecturer_attendance_out.get(position));
+                rendered_hours.setText(hours_rendered.get(position));
+                remarks_ss.setText(remarks_s.get(position));
+                remarks_ee.setText(remarks_e.get(position));
+                ad_date.setText(lecturer_attendance_date.get(position).replaceAll("\\n", " — "));
 
                 fbv_dialog.setView(v);
                 final AlertDialog dialog = fbv_dialog.create();
@@ -153,6 +162,7 @@ public class AttendanceDetail extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.attend_detail_base), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("attendance_detail_bg", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Snackbar.make(findViewById(R.id.attend_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -207,6 +217,7 @@ public class AttendanceDetail extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.i("attendance_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Snackbar.make(findViewById(R.id.attend_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
         swipeRefreshLayout.setRefreshing(false);
     }

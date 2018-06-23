@@ -228,6 +228,7 @@ public class MainActivity extends AppCompatActivity
             outputStream.close();
         } catch (Exception e){
             e.printStackTrace();
+            Snackbar.make(findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
@@ -283,8 +284,11 @@ public class MainActivity extends AppCompatActivity
                 is.close();
                 con.disconnect();
                 return sb.toString();
+            } catch (ConnectException e){
+                Snackbar.make(findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("update_token", e.toString());
+                Snackbar.make(findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -307,6 +311,7 @@ public class MainActivity extends AppCompatActivity
             }
         } catch (Exception e) {
             Log.i("update_token", String.valueOf(e));
+            Snackbar.make(findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -356,6 +361,7 @@ public class MainActivity extends AppCompatActivity
                 return "no_connection";
             } catch (Exception e) {     //error logs
                 Log.d("delete_token1", e.toString());
+                Snackbar.make(findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }

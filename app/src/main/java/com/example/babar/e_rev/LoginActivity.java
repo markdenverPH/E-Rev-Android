@@ -178,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
             saveUserDetails();
         } catch (Exception e) {
             Log.i("loginerror", String.valueOf(e));
+            Snackbar.make(findViewById(R.id.login_main), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -234,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
             spedit.apply();
         } catch (Exception e) {
             e.printStackTrace();
+            Snackbar.make(findViewById(R.id.login_main), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -283,6 +285,7 @@ public class LoginActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+            Snackbar.make(findViewById(R.id.login_main), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 
