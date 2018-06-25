@@ -86,7 +86,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.babar.e_rev.MainActivity" />
         </activity>
-        <activity android:name=".custom_row_attendance_detail"></activity>
+        <activity
+            android:name=".custom_row_attendance_detail"
+            android:label="Schedule"></activity>
+        <activity android:name=".custom_row_schedule"></activity>
     </application>
 
 </manifest>

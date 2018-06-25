@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        /*https://stackoverflow.com/questions/24098494/error-when-generate-signed-apk*/
+        checkReleaseBuilds false
+
+    }
     productFlavors {
     }
 }

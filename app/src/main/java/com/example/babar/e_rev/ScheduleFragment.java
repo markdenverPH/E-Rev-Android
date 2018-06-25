@@ -1,6 +1,7 @@
 package com.example.babar.e_rev;
 
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,6 +32,7 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,12 +44,13 @@ public class ScheduleFragment extends Fragment {
 
     SwipeRefreshLayout swipeRefreshLayout;
     String base;
-    public UserDetails userDetails;
+    UserDetails userDetails;
     JSONArray jsonArray;
     JSONObject jsonObject;
-    ListView lv;
-    TextView no_announcements;
+    ListView lv_sched_fic = null;
+    TextView no_sched_fic = null;
     View rootView;
+    ProgressDialog dialog = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +63,13 @@ public class ScheduleFragment extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_schedule_student, container, false);
         } else {
             rootView = inflater.inflate(R.layout.fragment_schedule_fic, container, false);
+            swipeRefreshLayout = rootView.findViewById(R.id.swiperefresh_sched_fic);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    new schedule().execute();
+                }
+            });
         }
 
         new schedule().execute();
@@ -67,10 +79,19 @@ public class ScheduleFragment extends Fragment {
 
     class schedule extends AsyncTask<Void, Void, String> {
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            swipeRefreshLayout.setRefreshing(true);
+            if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+                dialog = new ProgressDialog(getActivity());
+                dialog.setMessage("Loading...");
+                dialog.setIndeterminate(false);
+                dialog.setCancelable(true);
+                dialog.show();
+            } else {
+                swipeRefreshLayout.setRefreshing(true);
+            }
         }
 
         @Override
@@ -99,7 +120,6 @@ public class ScheduleFragment extends Fragment {
                 bw.close();
                 os.close();
 //                int rc = con.getResponseCode();
-
                 InputStream is = con.getInputStream();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -115,7 +135,7 @@ public class ScheduleFragment extends Fragment {
             } catch(ConnectException e){
                 Snackbar.make(getActivity().findViewById(R.id.coor_layout), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
-                Log.d("announcementerror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+                Log.d("sched_error1", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
                 Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
@@ -123,44 +143,90 @@ public class ScheduleFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String strJSON) {
-            Log.d("strJSON", strJSON);
+            Log.d("sched_strJSON", strJSON);
             parseJSON(strJSON);
-            swipeRefreshLayout.setRefreshing(false);
+            if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+                dialog.dismiss();
+            } else {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
         }
     }
 
     public void parseJSON(String strJSON) {
-        try {
-            userDetails.announcement_title.clear();
-            userDetails.announcement_content.clear();
-            userDetails.announcement_created_at.clear();
-            userDetails.announcement_end_datetime.clear();
-            userDetails.announcement_start_datetime.clear();
-            userDetails.announcement_announcer.clear();
+        TextView venue = null;
+        TextView day = null;
+        TextView time = null;
+        TextView section = null;
 
-            if (strJSON == "") { //if empty json
-                lv.setVisibility(View.GONE);
-                no_announcements.setVisibility(View.VISIBLE);
-                lv.setAdapter(null);
+        TextView tv_no_data = null;
+        LinearLayout tv_with_data = null;
+
+        ArrayList<String> fic_section = null;
+        ArrayList<String> fic_schedule = null;
+        ArrayList<String> fic_venue = null;
+        try {
+
+            if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+                venue = rootView.findViewById(R.id.sched_venue);
+                day = rootView.findViewById(R.id.sched_day);
+                time = rootView.findViewById(R.id.sched_time);
+                section = rootView.findViewById(R.id.sched_section);
+
+                tv_no_data = rootView.findViewById(R.id.sched_no_data);
+                tv_with_data = rootView.findViewById(R.id.sched_with_data);
             } else {
-                jsonObject = new JSONObject(strJSON);
-                jsonArray = jsonObject.getJSONArray("result");
+                fic_section = new ArrayList<>();
+                fic_schedule = new ArrayList<>();
+                fic_venue = new ArrayList<>();
+
+                lv_sched_fic = rootView.findViewById(R.id.lv_sched_fic);
+                no_sched_fic = rootView.findViewById(R.id.tv_no_sched_fic);
+                swipeRefreshLayout = rootView.findViewById(R.id.swiperefresh_sched_fic);
+            }
+
+            jsonObject = new JSONObject(strJSON);
+            jsonArray = jsonObject.getJSONArray("result");
+            if (strJSON == "" || jsonArray.length() == 0) { //if empty json
+                if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+                    tv_no_data.setVisibility(View.VISIBLE);
+                    tv_with_data.setVisibility(View.GONE);
+                } else {
+                    lv_sched_fic.setVisibility(View.GONE);
+                    no_sched_fic.setVisibility(View.VISIBLE);
+                    lv_sched_fic.setAdapter(null);
+                }
+            } else {
                 int i = 0;
 
-                while (jsonArray.length() > i) {
+                if(userDetails.getIdentifier().equalsIgnoreCase("student")){
+                    tv_no_data.setVisibility(View.GONE);
+                    tv_with_data.setVisibility(View.VISIBLE);
+
                     jsonObject = jsonArray.getJSONObject(i);
-                    userDetails.announcement_title.add(i, jsonObject.getString("announcement_title"));
-                    i++;
+                    venue.setText(jsonObject.getString("schedule_venue"));
+                    day.setText(jsonObject.getString("day"));
+                    time.setText(jsonObject.getString("schedule"));
+                    section.setText(jsonObject.getString("offering_name"));
+                } else {
+                    while (jsonArray.length() > i) {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        fic_section.add(i, jsonObject.getString("offering_name"));
+                        fic_schedule.add(i, jsonObject.getString("schedule"));
+                        fic_venue.add(i, jsonObject.getString("schedule_venue"));
+                        i++;
+                    }
+                    no_sched_fic.setVisibility(View.GONE);
+                    lv_sched_fic.setVisibility(View.VISIBLE);
+                    BaseAdapter mAdapter;
+                    mAdapter = new custom_row_schedule(getActivity(), fic_section, fic_schedule,fic_venue);
+                    lv_sched_fic.setAdapter(mAdapter);
                 }
-                no_announcements.setVisibility(View.GONE);
-                lv.setVisibility(View.VISIBLE);
-                BaseAdapter mAdapter;
-                mAdapter = new custom_row_announcement(getActivity(), userDetails.announcement_title, userDetails.announcement_content,
-                        userDetails.announcement_created_at, userDetails.announcement_announcer);
-                lv.setAdapter(mAdapter);
+
             }
         } catch (Exception e) {
-            Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
+            Log.i("sched_error2", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
             Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
