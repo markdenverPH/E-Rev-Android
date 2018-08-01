@@ -105,7 +105,7 @@ public class FeedbackSend extends AppCompatActivity {
 
                 ContentValues cv = new ContentValues();
 
-                cv.put("lect_id", userDetails.getAd_item() + 1);
+                cv.put("lect_id", userDetails.feedback_lect_id.get(userDetails.getAd_item()));
                 cv.put("stud_id", userDetails.getStudent_id());
                 cv.put("department", userDetails.getDepartment());
                 cv.put("enrollment_id", userDetails.getEnrollment());

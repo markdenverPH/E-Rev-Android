@@ -222,9 +222,9 @@ public class FeedbackView extends AppCompatActivity {
 
                 ContentValues cv = new ContentValues();
 
-                Log.d("fbv_sentPOST", userDetails.getIdentifier() + " " + (userDetails.getAd_item() + 1) + " " + low + " " + high + " " + sort_hold + " " + userDetails.getDepartment());
+                Log.d("fbv_sentPOST", userDetails.getIdentifier() + " " + userDetails.feedback_lect_id.get(userDetails.getAd_item()) + " " + low + " " + high + " " + sort_hold + " " + userDetails.getDepartment());
                 cv.put("identifier", userDetails.getIdentifier());
-                cv.put("lect_id", userDetails.getAd_item() + 1);
+                cv.put("lect_id", userDetails.feedback_lect_id.get(userDetails.getAd_item()));
                 cv.put("lower_limit", low);
                 cv.put("higher_limit", high);
                 cv.put("sort", sort_hold);
@@ -251,7 +251,7 @@ public class FeedbackView extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.fb_view_base), "Cannot connect to the server, please check your internet connection", Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {     //error logs
                 Log.d("fbverror", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
-                Snackbar.make(findViewById(R.id.cm_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.fb_view_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
             }
             return "";
         }
@@ -309,7 +309,7 @@ public class FeedbackView extends AppCompatActivity {
             lv.smoothScrollToPosition(low);
         } catch (Exception e) {
             Log.i("fbv_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
-            Snackbar.make(findViewById(R.id.cm_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
+//            Snackbar.make(findViewById(R.id.fb_view_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

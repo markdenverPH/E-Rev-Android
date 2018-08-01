@@ -217,7 +217,7 @@ public class AttendanceDetail extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.i("attendance_detail_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
-            Snackbar.make(findViewById(R.id.attend_detail_base), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.attend_detail_base  ), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
         swipeRefreshLayout.setRefreshing(false);
     }

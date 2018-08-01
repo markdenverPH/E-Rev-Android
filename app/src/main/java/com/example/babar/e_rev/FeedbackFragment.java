@@ -76,11 +76,14 @@ public class FeedbackFragment extends Fragment {
                     } else {
                         Intent intent = new Intent(getActivity(), FeedbackSend.class);
                         userDetails.setAd_item(position);
+                        Log.d("feedback_position", String.valueOf(position));
+
                         startActivity(intent);
                     }
                 } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
                     Intent intent = new Intent(getActivity(), FeedbackView.class);
                     userDetails.setAd_item(position);
+                    Log.d("feedback_position", String.valueOf(position));
                     startActivity(intent);
                 }
             }

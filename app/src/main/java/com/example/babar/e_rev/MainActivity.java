@@ -1,5 +1,6 @@
 package com.example.babar.e_rev;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     public ScheduleFragment scheduleFragment = new ScheduleFragment();
     public FeedbackFragment feedbackFragment = new FeedbackFragment();
     public AttendanceFragment attendanceFragment = new AttendanceFragment();
+    public ProfileFragment profileFragment = new ProfileFragment();
     NavigationView navigationView;
     TextView nav_full_name, nav_user_role;
     int current_menu = R.id.nav_home;
@@ -99,14 +102,16 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_grade).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_attendance).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         } else if (userDetails.getIdentifier().equalsIgnoreCase("faculty in charge")) {
             navigationView.getMenu().findItem(R.id.nav_home).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_schedule).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_course_modules).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_feedback).setVisible(true);
-            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_grade).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_attendance).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
             navigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
         }
         View v = navigationView.getHeaderView(0);
@@ -195,6 +200,12 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
                         .replace(R.id.fragment_hold, attendanceFragment);
                 this.setTitle("Attendance");
+                fragmentTransaction.addToBackStack(null);
+            } else if (id == R.id.nav_profile) {
+                userDetails.setFrag_hold("Profile");
+                fragmentTransaction.setCustomAnimations(R.animator.slide_in_from_left, R.animator.slide_out_from_left)
+                        .replace(R.id.fragment_hold, profileFragment);
+                this.setTitle("Profile");
                 fragmentTransaction.addToBackStack(null);
             } else if (id == R.id.nav_logout) {
                 new delete_token().execute();

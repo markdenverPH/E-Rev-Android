@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment {
             }
         } catch (Exception e) {
             Log.i("announcement_error", String.valueOf(e.getStackTrace()[0].getLineNumber() + e.toString()));
-            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
+//            Snackbar.make(getActivity().findViewById(R.id.coor_layout), "An error occured, please try again.", Snackbar.LENGTH_LONG).show();
         }
     }
 

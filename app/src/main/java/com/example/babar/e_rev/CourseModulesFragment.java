@@ -31,7 +31,6 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,6 +98,9 @@ public class CourseModulesFragment extends Fragment {
 
                 ContentValues cv = new ContentValues();
 
+                cv.put("firstname", userDetails.getFirstname());
+                cv.put("midname", userDetails.getMidname());
+                cv.put("lastname", userDetails.getLastname());
                 cv.put("department", userDetails.getDepartment());
                 cv.put("identifier", userDetails.getIdentifier());
                 if(userDetails.getIdentifier().equalsIgnoreCase("student")){

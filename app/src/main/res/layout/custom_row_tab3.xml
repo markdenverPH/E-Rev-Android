@@ -27,12 +27,11 @@
                 android:id="@+id/pps_percent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="cursive"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:text="45%"
                 android:textColor="@android:color/white"
-                android:textSize="60sp"
-                android:textStyle="bold" />
+                android:textSize="60sp" />
 
             <TextView
                 android:id="@+id/pps_subject"
